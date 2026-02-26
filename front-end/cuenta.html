@@ -2,27 +2,209 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mi Cuenta - Historial de Compras</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doggie Chic Studio - Mis Compras</title>
+
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="BWap/style2.css">
     <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
     <style>
-        .historial-container { max-width: 800px; margin: 40px auto; padding: 20px; font-family: Arial, sans-serif; }
-        .compra-card { border: 1px solid #ccc; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: #f9f9f9; }
-        .estado-envio { color: #28a745; font-weight: bold; margin-top: 10px; }
+        /* Estilos específicos para la página de Mis Compras */
+        .cuenta-page {
+            padding: 50px 20px 100px 20px;
+            min-height: 60vh;
+        }
+
+        .page-title {
+            font-size: 45px;
+            color: #1D1E23;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .compras-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .compra-box {
+            background: #fff;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            border-top: 4px solid #0A8CEF;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .compra-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        }
+
+        .compra-box h3 {
+            font-size: 20px;
+            color: #1D1E23;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 12px;
+        }
+
+        .compra-box p {
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #3A3D46;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .compra-box strong {
+            color: #1D1E23;
+            font-weight: 600;
+        }
+
+        .total-destacado {
+            color: #0A8CEF !important;
+            font-weight: 800 !important;
+            font-size: 16px !important;
+        }
+
+        .estado-envio {
+            margin-top: 20px;
+            background: #E6F3FF;
+            color: #076FBE;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .estado-envio i {
+            font-size: 20px;
+            color: #0A8CEF;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            color: #1D1E23;
+            margin-bottom: 15px;
+        }
+
+        /* ===== Estilos Login/Usuario (Heredados) ===== */
+        .logout-button {
+            margin-left: 10px;
+            padding: 3px 10px;
+            background-color: #ff4d4d;
+            color: white !important;
+            border-radius: 15px;
+            font-size: 11px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .logout-button:hover { background-color: #cc0000; }
+        #userText { font-weight: bold; color: #0A8CEF; }
+        #carrito-btn { display: flex; align-items: center; gap: 6px; position: relative; text-decoration: none; cursor: pointer; }
+        #cartCount { background: #ff4d4d; color: #fff; border-radius: 50%; padding: 1px 6px; font-size: 11px; font-weight: 800; min-width: 18px; text-align: center; line-height: 18px; }
+        .menu-actions { display: flex; align-items: center; gap: 15px; }
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="index.html">Inicio</a>
-            <div id="menu-usuario"></div>
-        </nav>
+
+    <a href="https://api.whatsapp.com/send?phone=8136254170&text=Hola, me gustaria Obtener más información" class="float pulse" target="_blank"> 
+        <i class="fa fa-whatsapp my-float"></i>
+    </a>
+
+    <header class="header">
+        <div class="menu container">
+            <input type="checkbox" id="menu" />
+            <label for="menu">
+                <img src="img/menu.png" class="menu-icono" alt="Menú" />
+            </label>
+
+            <a href="index.html" class="logo">
+                <img src="img/Logo.png" alt="Logo Doggie Chic Studio" />
+            </a>
+
+            <nav class="navbar">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="servicios.html">Servicios</a></li>
+                    <li><a href="Productos.html">Productos</a></li>
+                    <li><a href="Contacto.html">Contacto</a></li>
+                </ul>
+            </nav>
+
+            <div class="menu-actions">
+                <div id="menu-usuario">
+                    <a href="login.html" id="userLink">
+                        <span id="userText">Cuenta</span>
+                    </a>
+                </div>
+                
+                <a href="carrito.html" id="carrito-btn" style="display: none;">
+                    <img src="img/car.svg" id="img-carrito" alt="Carrito" />
+                    <span id="cartCount">0</span>
+                </a>
+            </div>
+        </div>
     </header>
 
-    <div class="historial-container">
-        <h2>Mis Compras</h2>
-        <div id="lista-compras">Cargando historial...</div>
-    </div>
+    <main class="container cuenta-page">
+        <h1 class="page-title"><span class="resaltado">Mis</span> Compras</h1>
+        
+        <div id="lista-compras" class="compras-grid">
+            <div class="empty-state">
+                <p>Cargando tu historial...</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content container">
+            <div class="link">
+                <h3>Servicios</h3>
+                <ul>
+                    <li><a href="Productos.html">Productos</a></li>
+                    <li><a href="servicios.html">Estetica Canina</a></li>
+                    <li><a href="servicios.html">Membresias</a></li>
+                </ul>
+            </div>
+            <div class="link">
+                <h3>Atención</h3>
+                <ul>
+                    <li><a href="https://qrfy.io/p/5DwiUyk5c3" target="_blank">Ubicación</a></li>
+                    <li><a href="https://qrfy.io/p/BjZ-8MTiiQ" target="_blank">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="link">
+                <h3>Doggie Chic Studio</h3>
+                <div class="descarga social-links">
+                  <a href="https://www.facebook.com/p/Doggie-Chic-Studio-61572230048849/" target="_blank"><img src="img/store1.png" alt="FB"></a>
+                  <a href="https://www.instagram.com/doggiechic_studio/" target="_blank"><img src="img/store2.png" alt="IG"></a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
     <script src="cuenta.js"></script>
