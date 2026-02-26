@@ -59,7 +59,7 @@ passport.use(new GoogleStrategy({
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "https://proyecto-final-kirks-delta.vercel.app/auth/google/callback"
+    callbackURL: "https://proyecto-final-kirks-delta.vercel.app/auth/github/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
@@ -144,7 +144,6 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(401).json({ msg: 'Credenciales incorrectas' });
         }
 
-        const bcrypt = require('bcryptjs');
         const passwordValido = await bcrypt.compare(password, usuario.password);
         if (!passwordValido) {
             return res.status(401).json({ msg: 'Credenciales incorrectas' });
@@ -258,19 +257,11 @@ app.post('/api/contacto', async (req, res) => {
     }
 });
 
-// ARCHIVOS ESTÁTICOS
-const publicPath = path.join(__dirname, '..', 'front-end');
-app.use(express.static(publicPath));
-
-// FALLBACK PARA SPA (CORREGIDO PARA TU VERSIÓN DE NODE)
-app.use((req, res) => {
-    res.sendFile(path.join(publicPath, 'index.html'));
-});
+// IMPORTANTE: En Vercel no necesitamos servir el front-end desde Express 
+// ya que el vercel.json maneja las rutas estáticas por nosotros.
 
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en: http://localhost:${PORT}`);
+    console.log(`Servidor corriendo en el puerto: ${PORT}`);
 });
 
 module.exports = app;
-
-// deploy final
