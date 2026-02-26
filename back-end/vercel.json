@@ -2,11 +2,13 @@
   "version": 2,
   "builds": [
     { "src": "back-end/server.js", "use": "@vercel/node" },
-    { "src": "front-end/**", "use": "@vercel/static" }
+    { "src": "front-end/**/*", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/auth/(.*)", "dest": "back-end/server.js" },
     { "src": "/api/(.*)", "dest": "back-end/server.js" },
-    { "src": "/(.*)", "dest": "front-end/$1" }
+    { "src": "/(.*)", "dest": "/front-end/$1", "continue": true },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/front-end/index.html" }
   ]
 }
