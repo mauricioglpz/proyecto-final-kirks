@@ -1,0 +1,341 @@
+/* ===== HEADER.CSS — Doggie Chic Studio ===== */
+:root {
+  --navA: #0D47A1;
+  --navB: #1565C0;
+  --navC: #1976D2;
+  --shadow: 0 10px 24px rgba(0,0,0,.22);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* ===== BARRA FIJA ===== */
+.menu.container {
+  position: fixed !important;
+  top: 0; left: 0; right: 0;
+  width: 100vw !important;
+  max-width: none !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+
+  padding: 12px 24px !important;
+
+  background: linear-gradient(90deg, var(--navA) 0%, var(--navB) 45%, var(--navC) 100%) !important;
+  box-shadow: var(--shadow) !important;
+  border-bottom: 1px solid rgba(255,255,255,.20) !important;
+  border-radius: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+}
+
+/* ===== LOGO ===== */
+.logo {
+  display: flex !important;
+  align-items: center !important;
+  flex: 0 0 auto;
+  text-decoration: none;
+}
+
+.logo img {
+  height: 52px !important;
+  width: auto !important;
+  display: block !important;
+  background: rgba(255,255,255,.96) !important;
+  padding: 7px 12px !important;
+  border-radius: 14px !important;
+  border: 2px solid rgba(255,255,255,.25) !important;
+  box-shadow: 0 8px 16px rgba(0,0,0,.16) !important;
+}
+
+/* ===== NAVBAR CENTRADA ===== */
+.navbar {
+  flex: 1 1 auto;
+  display: flex !important;
+  justify-content: center;
+}
+
+.navbar ul {
+  display: flex !important;
+  align-items: center;
+  list-style: none !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.navbar ul li {
+  float: none !important;
+  position: relative;
+}
+
+.navbar ul li a {
+  display: block !important;
+  padding: 10px 16px !important;
+  border-radius: 12px !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  text-decoration: none;
+  background: transparent !important;
+  transition: background .15s;
+}
+
+.navbar ul li a:hover,
+.navbar ul li a.active {
+  background: rgba(255,255,255,.16) !important;
+  color: #fff !important;
+}
+
+/* ===== ACCIONES DERECHA (Cuenta + Carrito) ===== */
+.menu-actions {
+  flex: 0 0 auto;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+/* ===== BOTÓN CUENTA ===== */
+#menu-usuario {
+  display: flex !important;
+  align-items: center !important;
+}
+
+#userLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.30);
+  transition: background .15s;
+}
+
+#userLink:hover {
+  background: rgba(255,255,255,.25);
+}
+
+#userText {
+  font-weight: 800 !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  white-space: nowrap;
+}
+
+/* ===== BOTÓN SALIR ===== */
+.logout-button {
+  background-color: rgba(255,77,77,.90) !important;
+  color: white !important;
+  padding: 5px 12px !important;
+  border-radius: 20px !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,.25) !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+
+.logout-button:hover {
+  background-color: #ff1a1a !important;
+  transform: translateY(-1px);
+}
+
+/* ===== CARRITO ===== */
+#carrito-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+}
+
+#img-carrito {
+  width: 26px;
+  filter: brightness(0) invert(1) !important;
+}
+
+#cartCount {
+  background: #ff4d4d;
+  color: #fff;
+  border-radius: 50%;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 800;
+  min-width: 18px;
+  text-align: center;
+  line-height: 18px;
+}
+
+/* ===== HAMBURGUESA ===== */
+#menu { display: none !important; }
+
+.menu-icono { width: 26px; display: block; cursor: pointer; }
+
+.menu label {
+  display: none !important;
+  cursor: pointer;
+  order: 10;
+}
+
+/* ===== ESPACIO PARA HEADER FIJO ===== */
+.header      { padding-top: 96px; min-height: 70px; }
+.shop-header { padding-top: 96px; }
+.topbar      { min-height: 70px; padding-top: 96px; }
+
+/* ===== DROPDOWN CARRITO ===== */
+.submenu { position: relative; }
+
+.submenu #carrito { display: none; }
+
+.submenu:hover #carrito {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 99999;
+  background-color: rgba(17,24,39,.90);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  padding: 18px;
+  min-width: 380px;
+  box-shadow: 0 18px 38px rgba(0,0,0,.35);
+}
+
+/* ===================================================
+   RESPONSIVE MÓVIL — max-width: 911px
+   Hamburguesa izquierda | Logo centro | Cuenta+Carrito derecha
+   =================================================== */
+@media (max-width: 911px) {
+
+  .header      { padding-top: 80px; }
+  .shop-header { padding-top: 80px; }
+
+  .menu.container {
+    padding: 10px 14px !important;
+    display: grid !important;
+    grid-template-columns: auto 1fr auto !important;
+    grid-template-areas: "hamburguesa logo acciones" !important;
+    align-items: center !important;
+    gap: 0 !important;
+  }
+
+  /* Hamburguesa — columna izquierda */
+  .menu label {
+    display: flex !important;
+    align-items: center;
+    grid-area: hamburguesa;
+    order: 0;
+    padding-right: 10px;
+  }
+
+  /* Logo — columna centro */
+  .logo {
+    grid-area: logo;
+    justify-content: center;
+  }
+
+  .logo img {
+    height: 42px !important;
+  }
+
+  /* Acciones (Cuenta + Carrito) — columna derecha */
+  .menu-actions {
+    grid-area: acciones;
+    justify-content: flex-end;
+    gap: 8px !important;
+  }
+
+  /* Navbar desplegable — ocupa todo el ancho debajo */
+  .navbar {
+    grid-area: unset !important;
+    grid-column: 1 / -1 !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: var(--navB) !important;
+    display: none !important;
+    padding: 10px 0 !important;
+    box-shadow: 0 14px 28px rgba(0,0,0,.18) !important;
+    flex: unset !important;
+  }
+
+  #menu:checked ~ .navbar {
+    display: block !important;
+  }
+
+  .navbar ul {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    padding: 6px 14px !important;
+  }
+
+  .navbar ul li {
+    width: 100% !important;
+    float: none !important;
+  }
+
+  .navbar ul li a {
+    width: 100% !important;
+    font-size: 16px !important;
+    padding: 13px 14px !important;
+    border-radius: 10px !important;
+    background: rgba(255,255,255,.08) !important;
+    margin-bottom: 4px;
+  }
+
+  .navbar ul li a:hover,
+  .navbar ul li a.active {
+    background: rgba(255,255,255,.20) !important;
+  }
+
+  /* Botón Cuenta más compacto en móvil */
+  #userLink {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  #userText {
+    font-size: 12px !important;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .logout-button {
+    padding: 4px 8px !important;
+    font-size: 10px !important;
+  }
+
+  .submenu:hover #carrito {
+    right: 0 !important;
+    width: min(420px, calc(100vw - 24px)) !important;
+    min-width: unset !important;
+  }
+
+  /* Sección #menu-usuario dentro del navbar desplegable (si está ahí) */
+  #menu-usuario {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+/* ===== Tablet ajuste menor ===== */
+@media (max-width: 768px) {
+  #userText {
+    max-width: 70px;
+  }
+}

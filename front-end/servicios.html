@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doggie Chic - Paquetes</title>
+  <link rel="stylesheet" href="servicios.css" />
+  <link rel="stylesheet" href="BWap/style2.css">
+  <link rel="stylesheet" href="header.css">
+</head>
+
+<body>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+  <a href="https://api.whatsapp.com/send?phone=8136254170&text=Hola, me gustaria Obtener más información"
+     class="float pulse" target="_blank">
+    <i class="fa fa-whatsapp my-float"></i>
+  </a>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="menu container">
+
+      <!-- HAMBURGUESA (izquierda en móvil) -->
+      <input type="checkbox" id="menu" />
+      <label for="menu">
+        <img src="img/menu.png" class="menu-icono" alt="Menú" />
+      </label>
+
+      <!-- LOGO (centro en móvil) -->
+      <a href="index.html" class="logo">
+        <img src="img/Logo.png" alt="Logo Doggie Chic Studio" />
+      </a>
+
+      <!-- LINKS -->
+      <nav class="navbar">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a class="active" href="servicios.html">Servicios</a></li>
+          <li><a href="Productos.html">Productos</a></li>
+          <li><a href="Contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <!-- CUENTA + CARRITO (derecha) -->
+      <div class="menu-actions">
+        <div id="menu-usuario">
+          <a href="login.html" id="userLink">
+            <span id="userText">Cuenta</span>
+          </a>
+        </div>
+        <a href="carrito.html" id="carrito-btn" style="display:none;">
+          <img src="img/car.svg" id="img-carrito" alt="Carrito" />
+          <span id="cartCount">0</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="intro">
+      <div class="intro-left">
+        <h1>Paquetes Doggie Chic</h1>
+        <p>Elige el paquete ideal para tu mejor amigo. Todos nuestros servicios incluyen personal capacitado y productos premium.</p>
+      </div>
+      <div class="intro-right">
+        <div class="info-box">
+          <h3>¿Cómo funciona?</h3>
+          <ul>
+            <li>Elige tu paquete</li>
+            <li>Agenda tu visita</li>
+            <li>Recibe tu servicio premium</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="membership">
+      <div class="membership-inner">
+        <div class="membership-left">
+          <h2>Membresía Doggie Chic</h2>
+          <p>Paga mensual y recibe beneficios exclusivos para el cuidado constante de tu peludito.</p>
+          <div class="membership-points">
+            <div class="point">
+              <h4>Incluye</h4>
+              <p>1 corte + 2 baños + uñas + oídos + lagrimales + almohadillas.</p>
+            </div>
+            <div class="point">
+              <h4>Beneficios</h4>
+              <p>Descuentos, prioridad de agenda y regalo sorpresa.</p>
+            </div>
+          </div>
+        </div>
+        <div class="membership-right">
+          <div class="membership-card">
+            <p class="mini">Plan mensual</p>
+            <p class="big-price">$599 <span>MXN</span></p>
+            <a class="btn btn-outline" href="#">Quiero la membresía</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pricing">
+      <h2 class="section-title">Nuestros paquetes</h2>
+      <div class="cards">
+        <article class="card" id="paquete-basico">
+          <div class="card-img"><img src="img/PB1.png" alt="Básico" /></div>
+          <div class="card-body">
+            <h3>Básico</h3>
+            <p class="price">$269 <span>MXN</span></p>
+            <ul class="features">
+              <li>Baño completo</li>
+              <li>Corte de uñas</li>
+              <li>Perfume</li>
+            </ul>
+            <a class="btn" href="#">Elegir Básico</a>
+          </div>
+        </article>
+
+        <article class="card" id="paquete-completo">
+          <div class="badge">Más popular</div>
+          <div class="card-img"><img src="img/Pb2.png" alt="Completo" /></div>
+          <div class="card-body">
+            <h3>Completo</h3>
+            <p class="price">$319 <span>MXN</span></p>
+            <ul class="features">
+              <li>Corte Higiénico</li>
+              <li>Baño completo</li>
+              <li>Limpieza de oídos</li>
+            </ul>
+            <a class="btn" href="#">Elegir Premium</a>
+          </div>
+        </article>
+
+        <article class="card" id="paquete-spa">
+          <div class="card-img"><img src="img/PB3.png" alt="Spa" /></div>
+          <div class="card-body">
+            <h3>Spa</h3>
+            <p class="price">$369 <span>MXN</span></p>
+            <ul class="features">
+              <li>Corte personalizado</li>
+              <li>Corte higiénico</li>
+              <li>Baño completo</li>
+            </ul>
+            <a class="btn" href="#">Elegir Spa</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© Doggie Chic Studio. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    async function contratarServicio(nombreServicio, precioServicio) {
+      const nombreUsuario = localStorage.getItem('doggie_user') || "Usuario Invitado";
+      const datosServicio = { tipoServicio: nombreServicio, usuario: nombreUsuario, precio: precioServicio, fecha: new Date().toLocaleString() };
+      try {
+        console.log("Servicio contratado:", datosServicio);
+        alert(`✅ ¡Éxito! El servicio "${nombreServicio}" se registró para ${nombreUsuario}.`);
+      } catch (err) {
+        alert("❌ No hay conexión con el servidor.");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll('.pricing .card .btn').forEach(boton => {
+        boton.addEventListener('click', (e) => {
+          e.preventDefault();
+          const card = e.target.closest('.card');
+          const nombre = card.querySelector('h3').innerText;
+          const precio = parseInt(card.querySelector('.price').innerText.replace(/[^\d]/g, ""));
+          contratarServicio(nombre, precio);
+        });
+      });
+
+      const btnMem = document.querySelector('.membership .btn');
+      if (btnMem) {
+        btnMem.addEventListener('click', (e) => {
+          e.preventDefault();
+          const cardMem = e.target.closest('.membership-card');
+          const precio = parseInt(cardMem.querySelector('.big-price').innerText.replace(/[^\d]/g, ""));
+          contratarServicio("Membresía Mensual", precio);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

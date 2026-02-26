@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso - Doggie Chic Studio</title>
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="Cstyle.css">
+  <style>
+    .auth-container { max-width: 450px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .tabs { display: flex; justify-content: space-around; margin-bottom: 25px; border-bottom: 2px solid #f0f0f0; }
+    .tab { padding: 10px 20px; cursor: pointer; font-weight: bold; color: #888; transition: 0.3s; }
+    .tab.active { color: #0A8CEF; border-bottom: 2px solid #0A8CEF; }
+    .form-section { display: none; }
+    .form-section.active { display: block; }
+    .btn-social { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-decoration: none; color: black; font-family: inherit; font-size: 14px; }
+    .submit { width: 100%; background: #0A8CEF; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 15px; }
+    
+    /* Estilo específico para el botón de GitHub */
+    .btn-github { background-color: #24292e !important; color: white !important; border: none !important; }
+    .btn-github img { filter: invert(1); }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="menu container">
+      <a href="index.html" class="logo"><img src="img/Logo.png" alt="Logo"></a>
+      <nav class="navbar">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="servicios.html">Servicios</a></li>
+          <li><a href="Productos.html">Productos</a></li>
+          <li><a href="Contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="auth-container">
+      <div class="tabs">
+        <div class="tab active" id="tab-l" onclick="switchTab('login')">Entrar</div>
+        <div class="tab" id="tab-r" onclick="switchTab('register')">Registrarse</div>
+      </div>
+
+      <section id="login-section" class="form-section active">
+        <form id="loginForm" class="form">
+          <h3>¡Hola de nuevo!</h3>
+          <label>Correo electrónico</label>
+          <input type="email" id="l-correo" class="box" placeholder="tu@correo.com" required>
+          <label>Contraseña</label>
+          <input type="password" id="l-pass" class="box" placeholder="********" required>
+          <input type="submit" value="Iniciar Sesión" class="submit">
+        </form>
+      </section>
+
+      <section id="register-section" class="form-section">
+        <form id="registerForm" class="form">
+          <h3>Crea tu cuenta</h3>
+          <label>Nombre de usuario</label>
+          <input type="text" id="r-nombre" class="box" placeholder="Ej. FirulaisMaster" required>
+          <label>Correo electrónico</label>
+          <input type="email" id="r-correo" class="box" placeholder="tu@correo.com" required>
+          <label>Contraseña</label>
+          <input type="password" id="r-pass" class="box" placeholder="Mínimo 6 caracteres" required>
+          <input type="submit" value="Crear Cuenta" class="submit">
+        </form>
+      </section>
+
+      <div style="text-align: center; margin: 20px 0; color: #888;">— O continúa con —</div>
+      
+      <a href="/auth/google" class="btn-social" style="border: 1px solid #dadce0; background-color: white; color: #3c4043; font-weight: 500;">
+        <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="Google" style="width:20px;">
+        Continuar con Google
+      </a>
+      
+      <a href="/auth/github" class="btn-social btn-github">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" style="width:20px;">
+        GitHub
+      </a>
+    </div>
+  </main>
+
+  <script>
+    function switchTab(type) {
+      document.getElementById('login-section').classList.toggle('active', type === 'login');
+      document.getElementById('register-section').classList.toggle('active', type === 'register');
+      document.getElementById('tab-l').classList.toggle('active', type === 'login');
+      document.getElementById('tab-r').classList.toggle('active', type === 'register');
+    }
+
+    async function enviarAlServidor(url, datos) {
+      try {
+        const respuesta = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(datos)
+        });
+
+        const result = await respuesta.json();
+
+        if (respuesta.ok) {
+          if (result.token) {
+            localStorage.setItem('token', result.token);
+          }
+
+          const nombre = result.user?.nombreUsuario || result.nombre || datos.nombreUsuario || datos.correo;
+          localStorage.setItem('doggie_user', nombre);
+
+          if (result.role) {
+            localStorage.setItem('doggie_role', result.role);
+          }
+
+          alert("¡Bienvenido " + nombre + "!");
+          window.location.href = "index.html";
+        } else {
+          alert("Error: " + (result.msg || result.error || "Credenciales incorrectas"));
+        }
+      } catch (error) {
+        console.error("Error de red:", error);
+        alert("No se pudo conectar con el servidor.");
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      enviarAlServidor('/api/auth/login', {
+        correo: document.getElementById('l-correo').value,
+        password: document.getElementById('l-pass').value
+      });
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      enviarAlServidor('/api/auth/register', {
+        nombreUsuario: document.getElementById('r-nombre').value,
+        correo: document.getElementById('r-correo').value,
+        password: document.getElementById('r-pass').value,
+        metodoRegistro: 'Formulario'
+      });
+    });
+
+    
+    function registroSocial(red) {
+        if(red === 'Google') {
+            window.location.href = '/auth/google';
+        } else if(red === 'GitHub') {
+            window.location.href = '/auth/github';
+        } else {
+            alert("Opción no disponible por ahora");
+        }
+    }
+  </script>
+</body>
+</html>

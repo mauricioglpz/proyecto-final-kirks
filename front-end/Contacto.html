@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto - Doggie Chic Studio</title>
+
+  <link rel="stylesheet" href="Cstyle.css">
+  <link rel="stylesheet" href="BWap/style2.css">
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <a href="https://api.whatsapp.com/send?phone=8136254170&text=Hola,%20me%20gustaria%20obtener%20más%20información"
+     class="float pulse" target="_blank" rel="noopener">
+    <i class="fa fa-whatsapp my-float"></i>
+  </a>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="menu container">
+
+      <!-- HAMBURGUESA (izquierda en móvil) -->
+      <input type="checkbox" id="menu">
+      <label for="menu">
+        <img src="img/menu.png" class="menu-icono" alt="Menú">
+      </label>
+
+      <!-- LOGO (centro en móvil) -->
+      <a href="index.html" class="logo">
+        <img src="img/Logo.png" alt="Logo Doggie Chic Studio">
+      </a>
+
+      <!-- LINKS -->
+      <nav class="navbar">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="servicios.html">Servicios</a></li>
+          <li><a href="Productos.html">Productos</a></li>
+          <li><a class="active" href="Contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <!-- CUENTA + CARRITO (derecha) -->
+      <div class="menu-actions">
+        <div id="menu-usuario">
+          <a href="login.html" id="userLink">
+            <span id="userText">Cuenta</span>
+          </a>
+        </div>
+        <a href="carrito.html" id="carrito-btn" style="display:none;">
+          <img src="img/car.svg" id="img-carrito" alt="Carrito">
+          <span id="cartCount">0</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="container contact-card">
+
+      <form class="form" id="contactForm">
+        <h3>Escríbenos</h3>
+        <p>
+          En <strong>Doggie Chic Studio</strong> te respondemos lo más rápido posible.
+          Cuéntanos qué necesitas y te ayudamos.
+        </p>
+
+        <label for="nombre">Escribe tu nombre</label>
+        <input type="text" id="nombre" class="box" placeholder="Tu nombre" required>
+
+        <label for="correo">Escribe tu correo</label>
+        <input type="email" id="correo" class="box" placeholder="tucorreo@gmail.com" required>
+
+        <label for="mensaje">Escribe tu mensaje</label>
+        <textarea class="box" id="mensaje" cols="30" rows="10" placeholder="Hola, quiero información sobre..." required></textarea>
+
+        <input type="submit" value="Enviar" class="submit">
+      </form>
+
+      <div class="info">
+        <img src="img/info-1.svg" class="img-1" alt="Ilustración de contacto">
+        <div class="location">
+          <div class="icons">
+            <img src="img/gps.svg" alt="Ubicación">
+            <p>Av Paseo de los Leones 2048, Cumbres 2o. Sector Secc C, 64610 Monterrey, N.L.</p>
+          </div>
+          <div class="icons">
+            <img src="img/number.svg" alt="Teléfono">
+            <p>81 4006 2762</p>
+          </div>
+          <div class="icons">
+            <img src="img/email.svg" alt="Correo">
+            <p>doggiechicstudio@gmail.com</p>
+          </div>
+        </div>
+        <div class="social">
+          <img src="img/fa.svg" alt="Facebook">
+          <img src="img/tw.svg" alt="Twitter">
+          <img src="img/ins.svg" alt="Instagram">
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const datos = {
+        nombre: document.getElementById('nombre').value,
+        email: document.getElementById('correo').value,
+        mensaje: document.getElementById('mensaje').value
+      };
+      try {
+        const respuesta = await fetch('/api/contacto', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(datos)
+        });
+        if (respuesta.ok) {
+          alert("¡Mensaje enviado con éxito!");
+          e.target.reset();
+        } else {
+          alert("Hubo un problema al enviar el mensaje.");
+        }
+      } catch (error) {
+        alert("Error de conexión. Revisa que tu servidor Node.js esté activo.");
+      }
+    });
+  </script>
+</body>
+</html>

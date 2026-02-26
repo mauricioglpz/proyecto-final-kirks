@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doggie Chic - Tienda</title>
+
+  <link rel="stylesheet" href="shop.css" />
+  <link rel="stylesheet" href="BWap/style2.css">
+  <link rel="stylesheet" href="header.css">
+</head>
+
+<body>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+  <a href="https://api.whatsapp.com/send?phone=8136254170&text=Hola, me gustaria Obtener más información"
+     class="float pulse" target="_blank">
+    <i class="fa fa-whatsapp my-float"></i>
+  </a>
+
+  <!-- ===== HEADER ===== -->
+  <header class="shop-header">
+    <div class="menu container">
+
+      <!-- HAMBURGUESA (izquierda en móvil) -->
+      <input type="checkbox" id="menu" />
+      <label for="menu">
+        <img src="img/menu.png" class="menu-icono" alt="Icono de menú" />
+      </label>
+
+      <!-- LOGO (centro en móvil) -->
+      <a href="index.html" class="logo">
+        <img src="img/Logo.png" alt="Logo Doggie Chic Studio" />
+      </a>
+
+      <!-- LINKS -->
+      <nav class="navbar">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="servicios.html">Servicios</a></li>
+          <li><a class="active" href="Productos.html">Productos</a></li>
+          <li><a href="Contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <!-- CUENTA + CARRITO (derecha) -->
+      <div class="menu-actions">
+        <div id="menu-usuario">
+          <a href="login.html" id="userLink">
+            <span id="userText">Cuenta</span>
+          </a>
+        </div>
+        <div id="carrito-wrapper" style="display:none;">
+          <a href="carrito.html" id="carrito-btn">
+            <img src="img/car.svg" id="img-carrito" alt="Carrito de compras" />
+            <span id="cartCount">0</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="container shop-main">
+    <div class="shop-layout">
+
+      <aside class="shop-sidebar">
+        <h2 class="shop-title">Filtrar</h2>
+
+        <div class="shop-filter">
+          <label for="search">Buscar producto</label>
+          <input id="search" type="text" placeholder="Ej. shampoo, collar, antiparasitario..." />
+          <small>Busca por nombre, tags y descripción.</small>
+        </div>
+
+        <div class="shop-filter">
+          <label>Categoría</label>
+          <div class="chips" id="catChips">
+            <button class="chip active" data-cat="all" type="button">Todo</button>
+            <button class="chip" data-cat="cuidado" type="button">Cuidado</button>
+            <button class="chip" data-cat="accesorios" type="button">Accesorios</button>
+            <button class="chip" data-cat="juguetes" type="button">Juguetes</button>
+            <button class="chip" data-cat="farmacia" type="button">Farmacia</button>
+          </div>
+        </div>
+
+        <div class="shop-filter">
+          <label for="sort">Ordenar</label>
+          <select id="sort">
+            <option value="featured">Destacados</option>
+            <option value="az">A - Z</option>
+            <option value="priceLow">Precio (menor a mayor)</option>
+            <option value="priceHigh">Precio (mayor a menor)</option>
+          </select>
+        </div>
+
+        <div class="shop-note">
+          <strong>Nota:</strong> carrito y compra están en modo demo. Luego conectamos pagos reales + base de datos.
+        </div>
+      </aside>
+
+      <section class="shop-products">
+        <div class="shop-products-top">
+          <div>
+            <h2 class="shop-title">Productos</h2>
+            <p class="shop-subtitle">Da clic en "Ver" para detalle con fotos, descripción y similares.</p>
+          </div>
+        </div>
+
+        <div class="grid" id="grid">
+          <article class="card"
+            data-id="p01" data-title="Perfume Freshcare" data-price="199"
+            data-cat="cuidado" data-tags="cuidado,perfume,higiene,aroma"
+            data-desc="Perfume exclusivo para perros con aroma fresco y suave. Ideal para después del baño."
+            data-img="img/pla1.png">
+            <div class="card-img">
+              <img src="img/pla1.png" alt="Perfume Freshcare" />
+              <div class="card-actions">
+                <button class="btn btn-ghost btnView" type="button">Ver</button>
+                <button class="btn btnAdd" type="button">Agregar</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <h3>Perfume Freshcare</h3>
+              <div class="card-meta">
+                <span class="pill">Cuidado</span>
+                <span class="price">$199 MXN</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card"
+            data-id="p02" data-title="Collar Premium" data-price="149"
+            data-cat="accesorios" data-tags="accesorios,collar,paseo,pechera"
+            data-desc="Collar cómodo, resistente y con estilo. Ajustable para talla mediana."
+            data-img="img/pla2.png">
+            <div class="card-img">
+              <img src="img/pla2.png" alt="Collar Premium" />
+              <div class="card-actions">
+                <button class="btn btn-ghost btnView" type="button">Ver</button>
+                <button class="btn btnAdd" type="button">Agregar</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <h3>Collar Premium</h3>
+              <div class="card-meta">
+                <span class="pill">Accesorios</span>
+                <span class="price">$149 MXN</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card"
+            data-id="p03" data-title="Mordedera Antiestrés" data-price="79"
+            data-cat="juguetes" data-tags="juguetes,mordedera,entrenamiento,pelota"
+            data-desc="Juguete resistente para morder. Ayuda a liberar estrés y entretener."
+            data-img="img/pla3.png">
+            <div class="card-img">
+              <img src="img/pla3.png" alt="Mordedera Antiestrés" />
+              <div class="card-actions">
+                <button class="btn btn-ghost btnView" type="button">Ver</button>
+                <button class="btn btnAdd" type="button">Agregar</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <h3>Mordedera Antiestrés</h3>
+              <div class="card-meta">
+                <span class="pill">Juguetes</span>
+                <span class="price">$79 MXN</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- MODAL PRODUCTO -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-overlay" id="modalClose"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Detalle del producto">
+      <button class="modal-x" id="modalX" type="button" aria-label="Cerrar">✕</button>
+      <div class="modal-content">
+        <div class="modal-left">
+          <img id="mImg" class="modal-img" src="" alt="Imagen del producto" />
+          <div class="thumbs" id="mThumbs"></div>
+        </div>
+        <div class="modal-right">
+          <h3 id="mTitle">Producto</h3>
+          <p class="muted" id="mDesc"></p>
+          <div class="modal-priceRow">
+            <span class="priceBig" id="mPrice">$0 MXN</span>
+            <span class="pill" id="mCat">Categoría</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin:10px 0;">
+            <label for="mQty" style="font-size:14px;font-weight:600;">Cantidad:</label>
+            <input type="number" id="mQty" value="1" min="1"
+              style="width:60px;padding:5px 8px;border-radius:8px;border:1px solid #ccc;font-size:14px;text-align:center;">
+          </div>
+          <div class="modal-btns">
+            <button class="btn" id="mAdd" type="button">Agregar al carrito</button>
+            <button class="btn btn-ghost" id="mBuy" type="button">Comprar Ahora</button>
+          </div>
+          <hr class="divider" />
+          <h4 class="subtitle">Productos similares</h4>
+          <div class="simGrid" id="mSimilar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="shop.js"></script>
+</body>
+</html>
