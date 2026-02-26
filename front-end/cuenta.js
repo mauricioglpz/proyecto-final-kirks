@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <p><strong>Cantidad:</strong> ${prod.cantidad}</p>
                     <p><strong>Total pagado:</strong> $${prod.total} MXN</p>
                     <p><strong>Fecha de compra:</strong> ${fecha}</p>
-                    <p class="estado-envio">🚚 El producto se encuentra en envío</p>
+                    <p class="estado-envio">El producto se encuentra en envío</p>
                 `;
                 contenedor.appendChild(card);
             });
