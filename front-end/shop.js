@@ -216,7 +216,7 @@ const PRODUCTOS_BASE = [
             </button>
             <button class="btn-admin-delete" data-id="${p.id}"
               style="flex:1; background:#ff4d4d; color:#fff; border:none; border-radius:8px; padding:6px; font-weight:700; cursor:pointer;">
-               Borrar
+              🗑️ Borrar
             </button>
           </div>` : ''}
         </div>
@@ -272,7 +272,7 @@ const PRODUCTOS_BASE = [
           border:none;font-size:22px;cursor:pointer;color:#888;">✕</button>
 
         <h3 style="margin-bottom:20px; color:#0D47A1; font-size:20px;">
-          ${esEdicion ? 'Editar Producto' : '➕ Agregar Producto'}
+          ${esEdicion ? '✏️ Editar Producto' : '➕ Agregar Producto'}
         </h3>
 
         <div style="display:flex; flex-direction:column; gap:14px;">
@@ -321,7 +321,7 @@ const PRODUCTOS_BASE = [
             style="background:linear-gradient(90deg,#0D47A1,#1976D2); color:white; border:none;
                    border-radius:10px; padding:13px; font-size:16px; font-weight:800; cursor:pointer;
                    margin-top:6px; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-            ${esEdicion ? ' Guardar Cambios' : '➕ Agregar Producto'}
+            ${esEdicion ? '💾 Guardar Cambios' : '➕ Agregar Producto'}
           </button>
         </div>
       </div>
@@ -374,7 +374,7 @@ const PRODUCTOS_BASE = [
           // Pero aquí solo actualizamos el grid.
           adminModal.remove();
           await renderGrid();
-          alert(esEdicion ? " Producto actualizado." : "Producto agregado.");
+          alert(esEdicion ? "✅ Producto actualizado." : "✅ Producto agregado.");
         } else {
           const err = await respuesta.json();
           alert("Error: " + (err.msg || err.error || "No se pudo guardar"));
@@ -432,7 +432,7 @@ const PRODUCTOS_BASE = [
           
           if (respuesta.ok) {
              await renderGrid();
-             alert("Producto eliminado.");
+             alert("🗑️ Producto eliminado.");
           } else {
              const err = await respuesta.json();
              alert("Error al eliminar en servidor: " + (err.msg || err.error));
@@ -447,7 +447,7 @@ const PRODUCTOS_BASE = [
           const productosAdmin = getLocal().filter(p => p.id !== id);
           setLocal(productosAdmin);
           await renderGrid();
-          alert("Producto eliminado localmente (sin conexión).");
+          alert("🗑️ Producto eliminado localmente (sin conexión).");
         }
       });
     });
