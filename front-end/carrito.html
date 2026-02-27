@@ -31,16 +31,10 @@
             padding: 40px 0 80px 0;
             min-height: 60vh;
         }
+        .carrito-page h2 { margin-bottom: 10px; }
+        .carrito-page > .container > p { margin-bottom: 30px; }
 
-        .carrito-page h2 {
-            margin-bottom: 10px;
-        }
-
-        .carrito-page > .container > p {
-            margin-bottom: 30px;
-        }
-
-        /* Tabla del carrito */
+        /* ===== TABLA (desktop) ===== */
         .carrito-tabla-wrapper {
             background: #fff;
             border-radius: 18px;
@@ -48,16 +42,10 @@
             overflow: hidden;
             margin-bottom: 30px;
         }
-
-        .carrito-tabla {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
+        .carrito-tabla { width: 100%; border-collapse: collapse; }
         .carrito-tabla thead {
             background: linear-gradient(90deg, #0D47A1 0%, #1565C0 45%, #1976D2 100%);
         }
-
         .carrito-tabla thead th {
             color: #fff !important;
             padding: 16px 20px;
@@ -65,75 +53,129 @@
             font-size: 15px;
             font-weight: 700;
         }
+        .carrito-tabla tbody tr { border-bottom: 1px solid #f0f0f0; transition: background 0.2s; }
+        .carrito-tabla tbody tr:last-child { border-bottom: none; }
+        .carrito-tabla tbody tr:hover { background: #f5f7fa; }
+        .carrito-tabla td { padding: 16px 20px; color: #1D1E23; font-size: 15px; vertical-align: middle; }
+        .carrito-tabla td img { width: 65px; height: 65px; object-fit: cover; border-radius: 10px; border: 2px solid #e0e0e0; }
+        .carrito-tabla .td-nombre { font-weight: 600; }
+        .carrito-tabla .td-precio { color: #0A8CEF; font-weight: 700; }
+        .carrito-tabla .td-subtotal { color: #076FBE; font-weight: 800; }
 
-        .carrito-tabla tbody tr {
-            border-bottom: 1px solid #f0f0f0;
-            transition: background 0.2s;
-        }
-
-        .carrito-tabla tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        .carrito-tabla tbody tr:hover {
-            background: #f5f7fa;
-        }
-
-        .carrito-tabla td {
-            padding: 16px 20px;
-            color: #1D1E23;
-            font-size: 15px;
-            vertical-align: middle;
-        }
-
-        .carrito-tabla td img {
-            width: 65px;
-            height: 65px;
-            object-fit: cover;
-            border-radius: 10px;
-            border: 2px solid #e0e0e0;
-        }
-
-        .carrito-tabla .td-nombre {
-            font-weight: 600;
-        }
-
-        .carrito-tabla .td-precio {
-            color: #0A8CEF;
-            font-weight: 700;
-        }
-
-        .carrito-tabla .td-subtotal {
-            color: #076FBE;
-            font-weight: 800;
-        }
-
-        /* Input de cantidad en la tabla */
         .qty-input {
-            width: 60px;
-            padding: 6px 8px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 15px;
-            text-align: center;
+            width: 60px; padding: 6px 8px; border: 1px solid #ccc;
+            border-radius: 8px; font-size: 15px; text-align: center;
         }
-
-        /* Botón eliminar */
         .btn-eliminar {
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 6px 14px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
+            background-color: #ff4d4d; color: white; border: none;
+            border-radius: 8px; padding: 6px 14px; font-size: 13px;
+            font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block;
         }
         .btn-eliminar:hover { background-color: #cc0000; color: white; }
 
-        /* Panel del resumen */
+        /* ===== TARJETAS MÓVIL (ocultas en desktop) ===== */
+        .carrito-cards { display: none; margin-bottom: 24px; }
+
+        .carrito-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+            border: 1px solid #e8e8e8;
+            margin-bottom: 14px;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .carrito-card-img {
+            width: 110px;
+            min-width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-right: 1px solid #f0f0f0;
+        }
+
+        .carrito-card-info {
+            flex: 1;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .carrito-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1D1E23;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .carrito-card-precio {
+            font-size: 18px;
+            font-weight: 800;
+            color: #0A8CEF;
+            margin-bottom: 4px;
+        }
+
+        .carrito-card-subtotal {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .carrito-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Contador tipo Amazon: 🗑 − 1 + */
+        .qty-control {
+            display: flex;
+            align-items: center;
+            border: 2px solid #0A8CEF;
+            border-radius: 999px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .qty-btn {
+            background: none;
+            border: none;
+            padding: 5px 11px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #0A8CEF;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .qty-btn:hover { background: #E6F3FF; }
+        .qty-btn.delete { color: #ff4d4d; font-size: 13px; }
+
+        .qty-num {
+            padding: 5px 10px;
+            font-size: 14px;
+            font-weight: 800;
+            color: #1D1E23;
+            min-width: 28px;
+            text-align: center;
+            border-left: 1px solid #e0e0e0;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .btn-eliminar-card {
+            background: none;
+            border: none;
+            color: #ff4d4d;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 4px 0;
+            text-decoration: underline;
+        }
+
+        /* ===== Resumen ===== */
         .carrito-bottom {
             display: flex;
             justify-content: flex-end;
@@ -141,7 +183,6 @@
             align-items: flex-start;
             flex-wrap: wrap;
         }
-
         .resumen-box {
             background: #fff;
             border-radius: 18px;
@@ -150,115 +191,52 @@
             min-width: 300px;
             border-top: 3px solid #0A8CEF;
         }
-
-        .resumen-box h3 {
-            font-size: 20px;
-            color: #1D1E23;
-            margin-bottom: 18px;
-        }
-
-        .resumen-fila {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            font-size: 15px;
-            color: #3A3D46;
-        }
-
-        .resumen-fila.total {
-            border-top: 2px solid #e0e0e0;
-            padding-top: 14px;
-            margin-top: 6px;
-            font-size: 18px;
-            font-weight: 800;
-            color: #0A8CEF;
-        }
+        .resumen-box h3 { font-size: 20px; color: #1D1E23; margin-bottom: 18px; }
+        .resumen-fila { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; color: #3A3D46; }
+        .resumen-fila.total { border-top: 2px solid #e0e0e0; padding-top: 14px; margin-top: 6px; font-size: 18px; font-weight: 800; color: #0A8CEF; }
 
         .btn-comprar-ahora {
-            display: block;
-            width: 100%;
+            display: block; width: 100%;
             background: linear-gradient(90deg, #0D47A1, #1976D2);
-            color: #fff;
-            text-align: center;
-            padding: 13px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 800;
-            margin-top: 18px;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            box-shadow: 0 5px 14px rgba(10,140,239,0.3);
+            color: #fff; text-align: center; padding: 13px;
+            border-radius: 12px; font-size: 16px; font-weight: 800;
+            margin-top: 18px; border: none; cursor: pointer;
+            text-decoration: none; box-shadow: 0 5px 14px rgba(10,140,239,0.3);
             transition: all 0.2s;
         }
-        .btn-comprar-ahora:hover {
-            background: linear-gradient(90deg, #0A8CEF, #028DF1);
-            transform: translateY(-2px);
-            color: #fff;
-        }
+        .btn-comprar-ahora:hover { background: linear-gradient(90deg, #0A8CEF, #028DF1); transform: translateY(-2px); color: #fff; }
 
         .btn-vaciar {
-            display: block;
-            width: 100%;
-            background: #fff;
-            color: #ff4d4d;
-            text-align: center;
-            padding: 10px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            margin-top: 10px;
-            border: 2px solid #ff4d4d;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s;
+            display: block; width: 100%; background: #fff; color: #ff4d4d;
+            text-align: center; padding: 10px; border-radius: 12px;
+            font-size: 14px; font-weight: 700; margin-top: 10px;
+            border: 2px solid #ff4d4d; cursor: pointer; text-decoration: none; transition: all 0.2s;
         }
-        .btn-vaciar:hover {
-            background: #ff4d4d;
-            color: #fff;
-        }
+        .btn-vaciar:hover { background: #ff4d4d; color: #fff; }
 
         /* Carrito vacío */
-        .carrito-vacio {
-            text-align: center;
-            padding: 60px 20px;
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        }
-        .carrito-vacio img {
-            width: 120px;
-            opacity: 0.35;
-            margin-bottom: 20px;
-        }
-        .carrito-vacio h3 {
-            font-size: 24px;
-            color: #1D1E23;
-            margin-bottom: 10px;
-        }
-        .carrito-vacio p {
-            color: #3A3D46;
-            margin-bottom: 28px;
-        }
+        .carrito-vacio { text-align: center; padding: 60px 20px; background: #fff; border-radius: 18px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+        .carrito-vacio img { width: 120px; opacity: 0.35; margin-bottom: 20px; }
+        .carrito-vacio h3 { font-size: 24px; color: #1D1E23; margin-bottom: 10px; }
+        .carrito-vacio p { color: #3A3D46; margin-bottom: 28px; }
 
-        /* Responsive */
-        @media (max-width: 911px) {
-            .carrito-page {
-                padding: 30px 20px 60px 20px;
-            }
+        /* ===== BREAKPOINTS ===== */
 
+        /* Tablet (768px): ocultar columna imagen y subtotal en tabla */
+        @media (max-width: 768px) {
             .carrito-tabla thead th:nth-child(1),
-            .carrito-tabla td:nth-child(1) {
-                display: none; /* ocultar imagen en móvil */
-            }
+            .carrito-tabla td:nth-child(1),
+            .carrito-tabla thead th:nth-child(5),
+            .carrito-tabla td:nth-child(5) { display: none; }
+        }
 
-            .carrito-bottom {
-                justify-content: center;
-            }
-
-            .resumen-box {
-                width: 100%;
-            }
+        /* Móvil (560px): ocultar tabla, mostrar tarjetas tipo Amazon */
+        @media (max-width: 560px) {
+            .carrito-page { padding: 20px 14px 60px 14px; }
+            .carrito-tabla-wrapper { display: none; }
+            .carrito-cards { display: block; }
+            .carrito-bottom { justify-content: center; }
+            .resumen-box { width: 100%; min-width: unset; padding: 20px; }
         }
     </style>
 </head>
@@ -276,38 +254,34 @@
     <header class="header">
         <img class="bg" src="img/bg.png" alt="">
         <div class="menu container">
-            <!-- LOGO (IZQUIERDA) -->
-            <a href="index.html" class="logo"><img src="img/logo-perro.png" alt="Doggie Chic Studio"></a>
-            
+            <a href="index.html" class="logo"><img src="img/Logo.png" alt="Doggie Chic Studio"></a>
             <input type="checkbox" id="menu">
             <label for="menu">
                 <img src="img/menu.png" class="menu-icono" alt="menú">
             </label>
-            
-            <!-- LINKS (CENTRO) -->
             <nav class="navbar">
                 <ul>
                     <li><a href="index.html">Inicio</a></li>
                     <li><a href="servicios.html">Servicios</a></li>
                     <li><a href="Productos.html">Productos</a></li>
                     <li><a href="Contacto.html">Contacto</a></li>
+                    <li id="menu-usuario">
+                        <a href="login.html" id="userLink">
+                            <span id="userText">Cuenta</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
-            
-            <!-- LOGIN Y CARRITO (DERECHA) -->
-            <div class="menu-actions">
-                <!-- Login -->
-                <div id="menu-usuario">
-                    <a href="login.html" id="userLink">
-                        <span id="userText">Cuenta</span>
-                    </a>
-                </div>
-                
-                <!-- Carrito (oculto por defecto) -->
-                <a href="carrito.html" id="carrito-btn" style="display: none;">
-                    <img src="img/car.svg" id="img-carrito" alt="carrito">
-                    <span id="cartCount">0</span>
-                </a>
+            <div>
+                <ul>
+                    <li class="submenu">
+                        <a href="carrito.html" id="img-carrito-link" style="display:flex; align-items:center; gap:6px; position:relative;">
+                            <img src="img/car.svg" id="img-carrito" alt="carrito">
+                            <span id="cartCount"
+                                style="background:#ff4d4d;color:#fff;border-radius:50%;padding:1px 6px;font-size:11px;font-weight:800;min-width:18px;text-align:center;line-height:18px;">0</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </header>
@@ -320,6 +294,8 @@
 
             <!-- Se muestra si hay productos -->
             <div id="carritoConProductos" style="display:none;">
+
+                <!-- TABLA (desktop / tablet) -->
                 <div class="carrito-tabla-wrapper">
                     <table class="carrito-tabla">
                         <thead>
@@ -335,6 +311,9 @@
                         <tbody id="carritoTbody"></tbody>
                     </table>
                 </div>
+
+                <!-- TARJETAS (móvil tipo Amazon) -->
+                <div class="carrito-cards" id="carritoCards"></div>
 
                 <div class="carrito-bottom">
                     <div class="resumen-box">
@@ -366,7 +345,6 @@
                     <a href="Productos.html" class="btn-1">Ver Productos</a>
                 </div>
             </div>
-
         </div>
     </section>
 
@@ -404,25 +382,69 @@
             <div class="link">
                 <h3>Doggie Chic Studio</h3>
                 <div class="descargar">
-                    <a href="https://www.facebook.com/p/Doggie-Chic-Studio-61572230048849/" target="_blank"><img src="img/store1.png" alt="FB"></a>
-                    <a href="https://www.instagram.com/doggiechic_studio/" target="_blank"><img src="img/store2.png" alt="IG"></a>
+                    <img src="img/store1.png" alt="App">
+                    <img src="img/store2.png" alt="App">
                 </div>
             </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
-
     <script>
-        // La función renderCarrito es específica de esta página
+        const STORAGE = "doggie_cart_shop_v1";
+
+        function getCart() {
+            try { return JSON.parse(localStorage.getItem(STORAGE) || "[]"); }
+            catch { return []; }
+        }
+
+        function setCart(items) {
+            localStorage.setItem(STORAGE, JSON.stringify(items));
+            renderCarrito();
+            updateBadge();
+        }
+
+        function moneyMXN(n) {
+            return "$" + Number(n || 0).toFixed(0) + " MXN";
+        }
+
+        function updateBadge() {
+            const badge = document.getElementById("cartCount");
+            if (badge) badge.textContent = getCart().length;
+        }
+
+        // Agrupar items del carrito por id
+        function agruparCart(cart) {
+            const agrupado = {};
+            cart.forEach((item) => {
+                if (!agrupado[item.id]) agrupado[item.id] = { ...item, cantidad: 1 };
+                else agrupado[item.id].cantidad++;
+            });
+            return Object.values(agrupado);
+        }
+
+        function cambiarCantidad(id, delta) {
+            let cart = getCart();
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+            const actual = cart.filter(i => i.id === id).length;
+            const nueva = Math.max(1, actual + delta);
+            cart = cart.filter(i => i.id !== id);
+            for (let x = 0; x < nueva; x++) cart.push({ ...item });
+            setCart(cart);
+        }
+
+        function eliminarProducto(id) {
+            setCart(getCart().filter(i => i.id !== id));
+        }
+
         function renderCarrito() {
-            // Usamos las funciones globales definidas en script.js
-            const cart = getCart(); 
+            const cart = getCart();
             const conProductos = document.getElementById("carritoConProductos");
             const vacio = document.getElementById("carritoVacio");
             const tbody = document.getElementById("carritoTbody");
+            const cardsEl = document.getElementById("carritoCards");
 
-            if (!cart || !cart.length) {
+            if (!cart.length) {
                 conProductos.style.display = "none";
                 vacio.style.display = "block";
                 return;
@@ -431,32 +453,18 @@
             conProductos.style.display = "block";
             vacio.style.display = "none";
 
-            // Agrupar por id para mostrar cantidades
-            // Lógica específica de la vista de carrito
-            const agrupado = {};
-            cart.forEach((item, idx) => {
-                // Aseguramos que item tenga id
-                if (!item.id) return;
-                
-                if (!agrupado[item.id]) {
-                    agrupado[item.id] = { ...item, indices: [idx] };
-                } else {
-                    agrupado[item.id].indices.push(idx);
-                }
-            });
+            const grupos = agruparCart(cart);
 
-            const grupos = Object.values(agrupado);
-
+            // ===== TABLA (desktop/tablet) =====
             tbody.innerHTML = grupos.map((item) => {
-                const cantidad = item.indices.length;
-                const subtotal = Number(item.price) * cantidad;
+                const subtotal = Number(item.price) * item.cantidad;
                 return `
                     <tr>
                         <td><img src="${item.img}" alt="${item.title}"></td>
                         <td class="td-nombre">${item.title}</td>
                         <td class="td-precio">${moneyMXN(item.price)}</td>
                         <td>
-                            <input type="number" class="qty-input" value="${cantidad}" min="1" data-id="${item.id}">
+                            <input type="number" class="qty-input" value="${item.cantidad}" min="1" data-id="${item.id}">
                         </td>
                         <td class="td-subtotal">${moneyMXN(subtotal)}</td>
                         <td><button class="btn-eliminar" data-delete="${item.id}">Eliminar</button></td>
@@ -464,123 +472,148 @@
                 `;
             }).join("");
 
-            // Calcular totales
-            const totalProductos = grupos.reduce((sum, item) => sum + item.indices.length, 0);
-            const totalPrecio = grupos.reduce((sum, item) => sum + Number(item.price) * item.indices.length, 0);
+            // ===== TARJETAS MÓVIL tipo Amazon =====
+            cardsEl.innerHTML = grupos.map((item) => {
+                const subtotal = Number(item.price) * item.cantidad;
+                return `
+                    <div class="carrito-card">
+                        <img class="carrito-card-img" src="${item.img}" alt="${item.title}" onerror="this.src='img/pla1.png'">
+                        <div class="carrito-card-info">
+                            <div class="carrito-card-title">${item.title}</div>
+                            <div class="carrito-card-precio">${moneyMXN(item.price)}</div>
+                            <div class="carrito-card-subtotal">Subtotal: ${moneyMXN(subtotal)}</div>
+                            <div class="carrito-card-actions">
+                                <div class="qty-control">
+                                    <button class="qty-btn delete" data-id="${item.id}" data-action="delete">🗑</button>
+                                    <button class="qty-btn" data-id="${item.id}" data-action="minus">−</button>
+                                    <span class="qty-num">${item.cantidad}</span>
+                                    <button class="qty-btn" data-id="${item.id}" data-action="plus">+</button>
+                                </div>
+                                <button class="btn-eliminar-card" data-id="${item.id}" data-action="remove">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
 
-            const elCant = document.getElementById("resumenCantidad");
-            const elSub = document.getElementById("resumenSubtotal");
-            const elTotal = document.getElementById("resumenTotal");
+            // Totales
+            const totalCantidad = grupos.reduce((s, i) => s + i.cantidad, 0);
+            const totalPrecio = grupos.reduce((s, i) => s + Number(i.price) * i.cantidad, 0);
+            document.getElementById("resumenCantidad").textContent = totalCantidad;
+            document.getElementById("resumenSubtotal").textContent = moneyMXN(totalPrecio);
+            document.getElementById("resumenTotal").textContent = moneyMXN(totalPrecio);
 
-            if(elCant) elCant.textContent = totalProductos;
-            if(elSub) elSub.textContent = moneyMXN(totalPrecio);
-            if(elTotal) elTotal.textContent = moneyMXN(totalPrecio);
-
-            // Eventos de cantidad (input change)
+            // Eventos tabla
             document.querySelectorAll(".qty-input").forEach(input => {
-                input.addEventListener("change", (e) => {
-                    const id = e.target.dataset.id;
-                    let nuevaCantidad = parseInt(e.target.value);
-                    if (isNaN(nuevaCantidad) || nuevaCantidad < 1) nuevaCantidad = 1;
+                input.addEventListener("change", () => {
+                    const id = input.dataset.id;
+                    const nuevaCantidad = Math.max(1, parseInt(input.value) || 1);
+                    let cart = getCart();
 
-                    let currentCart = getCart();
-                    // Buscar el item base
-                    const itemBase = currentCart.find(i => i.id === id);
+                    const itemBase = cart.find(i => i.id === id);
                     if (!itemBase) return;
 
-                    // Filtramos fuera todos los items con este ID
-                    currentCart = currentCart.filter(i => i.id !== id);
+                    const cantidadActual = cart.filter(i => i.id === id).length;
+                    const diferencia = nuevaCantidad - cantidadActual;
 
-                    // Re-agregamos la cantidad deseada
-                    for (let x = 0; x < nuevaCantidad; x++) {
-                        currentCart.push({ ...itemBase });
+                    if (diferencia > 0) {
+                        // Insertar copias justo despues del ultimo item con ese id
+                        const ultimoIdx = cart.map(i => i.id).lastIndexOf(id);
+                        for (let x = 0; x < diferencia; x++) {
+                            cart.splice(ultimoIdx + 1 + x, 0, { ...itemBase });
+                        }
+                    } else if (diferencia < 0) {
+                        // Eliminar las ultimas N copias de ese id
+                        let aEliminar = Math.abs(diferencia);
+                        for (let i = cart.length - 1; i >= 0 && aEliminar > 0; i--) {
+                            if (cart[i].id === id) {
+                                cart.splice(i, 1);
+                                aEliminar--;
+                            }
+                        }
                     }
-                    setCart(currentCart); // Esto actualizará badge y storage
-                    renderCarrito();      // Re-renderizar tabla
+
+                    setCart(cart);
+                    renderCarrito();
                 });
             });
 
-            // Eventos de eliminar
             document.querySelectorAll(".btn-eliminar").forEach(btn => {
-                btn.addEventListener("click", (e) => {
-                    const id = e.target.dataset.delete;
-                    const currentCart = getCart().filter(i => i.id !== id);
-                    setCart(currentCart);
-                    renderCarrito();
+                btn.addEventListener("click", () => eliminarProducto(btn.dataset.delete));
+            });
+
+            // Eventos tarjetas móvil
+            document.querySelectorAll(".qty-btn, .btn-eliminar-card").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const id = btn.dataset.id;
+                    const action = btn.dataset.action;
+                    if (action === "plus") cambiarCantidad(id, 1);
+                    if (action === "minus") cambiarCantidad(id, -1);
+                    if (action === "delete" || action === "remove") eliminarProducto(id);
                 });
             });
         }
 
         // Vaciar carrito
-        const btnVaciar = document.getElementById("btnVaciarCarrito");
-        if(btnVaciar) {
-            btnVaciar.addEventListener("click", () => {
-                if (confirm("¿Seguro que quieres vaciar el carrito?")) {
-                    setCart([]);
-                    renderCarrito();
-                }
+        document.getElementById("btnVaciarCarrito").addEventListener("click", () => {
+            if (confirm("¿Seguro que quieres vaciar el carrito?")) setCart([]);
+        });
+
+        // Comprar ahora (igual que tenías)
+        document.getElementById("btnComprarAhora").addEventListener("click", async () => {
+            const cart = getCart();
+            if (!cart.length) return;
+
+            const nombreUsuario = localStorage.getItem('doggie_user') || "Usuario Invitado";
+            const agrupado = {};
+            cart.forEach(item => {
+                if (!agrupado[item.id]) agrupado[item.id] = { ...item, cantidad: 1 };
+                else agrupado[item.id].cantidad++;
             });
-        }
+            const items = Object.values(agrupado);
 
-        // Comprar ahora
-        const btnComprar = document.getElementById("btnComprarAhora");
-        if(btnComprar) {
-            btnComprar.addEventListener("click", async () => {
-                const cart = getCart();
-                if (!cart.length) return;
-
-                // 1. Obtener el token del usuario
-                const token = localStorage.getItem('token');
-                
-                // 2. Validar que haya iniciado sesión
-                if (!token) {
-                    alert("Debes iniciar sesión para procesar tu compra.");
-                    window.location.href = "login.html"; 
-                    return;
-                }
-
-                // Agrupar items para enviar al backend
-                const agrupado = {};
-                cart.forEach(item => {
-                    if (!agrupado[item.id]) agrupado[item.id] = { ...item, cantidad: 1 };
-                    else agrupado[item.id].cantidad++;
+            try {
+                const respuesta = await fetch('/api/crear-sesion-stripe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items, usuario: nombreUsuario })
                 });
-                const items = Object.values(agrupado);
-
-                try {
-                    // 3. Apuntar a la nueva ruta y enviar el token
-                    const respuesta = await fetch('/api/pagos/crear-sesion-stripe', {
-                        method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            'x-auth-token': token // <-- Token para el authMiddleware
-                        },
-                        // Ya no enviamos "usuario" porque el backend lo saca seguro del token
-                        body: JSON.stringify({ items }) 
-                    });
-
-                    if (respuesta.ok) {
-                        const data = await respuesta.json();
-                        localStorage.setItem('compra_pendiente', JSON.stringify(items));
-                        // Vaciar el carrito localmente ANTES de ir a Stripe (Opcional, pero recomendado)
-                        // setCart([]); 
-                        window.location.href = data.url; 
-                    } else {
-                        const errorData = await respuesta.json();
-                        alert("Error al iniciar el pago: " + (errorData.error || errorData.msg || "Desconocido"));
-                    }
-                } catch (error) {
-                    console.error(error);
-                    alert("Error de conexión al procesar el pago.");
+                if (respuesta.ok) {
+                    const data = await respuesta.json();
+                    window.location.href = data.url;
+                } else {
+                    alert("Error al iniciar el pago.");
                 }
-            });
-        }
-        
-        // Inicialización al cargar
+            } catch (error) {
+                alert("Error de conexión con el servidor.");
+            }
+        });
+
+        // Login/usuario
         document.addEventListener("DOMContentLoaded", () => {
-            // El login/logout y el badge ya se manejan en script.js
-            // Solo necesitamos renderizar la tabla del carrito
+            const userName = localStorage.getItem('doggie_user');
+            const userLink = document.getElementById('userLink');
+            const userText = document.getElementById('userText');
+            const menuUsuario = document.getElementById('menu-usuario');
+
+            if (userName) {
+                userText.innerText = "Hola, " + userName;
+                userLink.href = "#";
+                const logoutBtn = document.createElement('a');
+                logoutBtn.innerText = "Salir";
+                logoutBtn.className = "logout-button";
+                logoutBtn.onclick = (e) => {
+                    e.preventDefault();
+                    if (confirm("¿Quieres cerrar sesión?")) {
+                        localStorage.removeItem('doggie_user');
+                        window.location.reload();
+                    }
+                };
+                menuUsuario.appendChild(logoutBtn);
+            }
+
             renderCarrito();
+            updateBadge();
         });
     </script>
 
