@@ -18,31 +18,32 @@ const transporter = nodemailer.createTransport({
 // 1. CREAR SESIÓN DE STRIPE
 // ================================================
 exports.crearSesionStripe = async (req, res) => {
-    try {
-        const { items } = req.body;
+    try {
+        const { items } = req.body;
+        const DOMAIN = req.headers.origin || 'https://proyecto-final-kirks-delta.vercel.app';
 
-        const lineItems = items.map(item => ({
-            price_data: {
-                currency: 'mxn',
-                product_data: { name: item.title },
-                unit_amount: Math.round(Number(item.price) * 100),
-            },
-            quantity: item.cantidad,
-        }));
+        const lineItems = items.map(item => ({
+            price_data: {
+                currency: 'mxn',
+                product_data: { name: item.title },
+                unit_amount: Math.round(Number(item.price) * 100),
+            },
+            quantity: item.cantidad,
+        }));
 
-      const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    line_items: lineItems,
-    mode: 'payment',
-    success_url: 'https://proyecto-final-kirks-delta.vercel.app/exito.html',
-    cancel_url:  'https://proyecto-final-kirks-delta.vercel.app/carrito.html',
-});
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: lineItems,
+            mode: 'payment',
+            success_url: `${DOMAIN}/exito.html`,
+            cancel_url:  `${DOMAIN}/carrito.html`,
+        });
 
-        res.json({ url: session.url });
-    } catch (error) {
-        console.error("Error en Stripe:", error);
-        res.status(500).json({ error: 'Error al iniciar el pago' });
-    }
+        res.json({ url: session.url });
+    } catch (error) {
+        console.error("Error en Stripe:", error);
+        res.status(500).json({ error: 'Error al iniciar el pago' });
+    }
 };
 
 // ================================================
