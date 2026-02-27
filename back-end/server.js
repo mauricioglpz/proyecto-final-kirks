@@ -248,27 +248,14 @@ app.post('/api/productos/vender', authMiddleware, async (req, res) => {
     }
 });
 
-app.post('/api/contacto', async (req, res) => {
-    try {
-        const nuevoMensaje = new Mensaje(req.body);
-        await nuevoMensaje.save();
-        res.status(201).json({ success: true });
-    } catch (error) {
-        res.status(400).json({ success: false, error: error.message });
-    }
+// ELIMINA las líneas de app.use(express.static...) y res.sendFile(...)
+// Y DEJA SOLO ESTO:
+
+app.get('/', (req, res) => {
+    res.send("Servidor encendido y listo.");
 });
 
-// ================================================
-// RUTAS DE API
-// ================================================
 app.use('/api/auth', authRoutes);
 app.use('/api/pagos', pagosRoutes);
 
-// Manejo de errores básico para rutas no encontradas
-app.use('/api/*', (req, res) => {
-    res.status(404).json({ msg: "Ruta de API no encontrada" });
-});
-// pero dejamos el module.exports
 module.exports = app;
-
-// deploy final
