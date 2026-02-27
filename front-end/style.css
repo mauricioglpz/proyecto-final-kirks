@@ -47,14 +47,13 @@ body{
 }
 
 .menu .logo img {
-    height: 58px !important;
-    width: auto !important;
-    display: block !important;
-    background: rgba(255,255,255,.96) !important;
-    padding: 8px 14px !important;
-    border-radius: 16px !important;
-    border: 2px solid rgba(255,255,255,.25) !important;
-    box-shadow: 0 10px 18px rgba(0,0,0,.18) !important;
+  height: 45px !important; /* Decreased height to shrink the overall logo */
+  width: auto !important;
+  display: block !important;
+  background: white !important; /* White background color */
+  padding: 7px 15px !important; /* Reduced lateral padding (15px) for a tighter oval fit, and slightly reduced vertical */
+  border-radius: 50px !important; /* Keep large radius to ensure pill shape */
+  box-shadow: 0 4px 8px rgba(0,0,0,.16) !important; /* Softer shadow */
 }
 
 /* Links del navbar para que coincidan con header.css */
