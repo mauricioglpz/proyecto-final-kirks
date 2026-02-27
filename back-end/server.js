@@ -59,7 +59,7 @@ passport.use(new GoogleStrategy({
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "https://proyecto-final-kirks-delta.vercel.app/auth/google/callback"
+    callbackURL: "https://proyecto-final-kirks-delta.vercel.app/auth/github/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
