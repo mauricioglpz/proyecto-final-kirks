@@ -570,7 +570,7 @@
     // 2. Configurar la URL (Cambia localhost:5000 por el puerto donde corra tu servidor)
     // Si estás en producción, usa tu URL de Vercel.
     const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000/api/crear-sesion-stripe'
+        ? 'http://localhost:4000/api/pagos/crear-sesion-stripe'
         : '/api/crear-sesion-stripe';
 
     const agrupado = {};
