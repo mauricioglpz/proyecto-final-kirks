@@ -59,7 +59,7 @@ passport.use(new GoogleStrategy({
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "https://proyecto-final-kirks-delta.vercel.app/auth/github/callback"
+    callbackURL: "https://proyecto-final-kirks-delta.vercel.app/auth/google/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
@@ -267,10 +267,12 @@ app.use((req, res) => {
     res.sendFile(path.join(publicPath, 'index.html'));
 });
 
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en: http://localhost:${PORT}`);
-});
-
-module.exports = app;
 
 // deploy final
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Servidor corriendo en: http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;
