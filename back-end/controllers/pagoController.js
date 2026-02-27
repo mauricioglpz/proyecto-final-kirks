@@ -30,16 +30,12 @@ exports.crearSesionStripe = async (req, res) => {
             quantity: item.cantidad,
         }));
 
-      const protocol = req.protocol; // Detecta si es http o https
-const host = req.get('host');  // Detecta si es localhost o proyecto-final...vercel.app
-
-const session = await stripe.checkout.sessions.create({
+      const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     line_items: lineItems,
     mode: 'payment',
-    // Esto construye la URL automáticamente:
-    success_url: `${protocol}://${host}/exito.html`,
-    cancel_url:  `${protocol}://${host}/carrito.html`,
+    success_url: 'https://proyecto-final-kirks-delta.vercel.app/exito.html',
+    cancel_url:  'https://proyecto-final-kirks-delta.vercel.app/carrito.html',
 });
 
         res.json({ url: session.url });
