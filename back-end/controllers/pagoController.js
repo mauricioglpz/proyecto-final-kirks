@@ -1,15 +1,11 @@
-const express = require('express');
-const router = express.Router();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-const authMiddleware = require('../middlewares/authMiddleware');
-
-// IMPORTANTE: Verifica que los nombres de carpetas y archivos coincidan exactamente (mayúsculas/minúsculas)
-const Usuario = require('../models/Usuario');
 const ProductoVendido = require('../models/ProductoVendido');
 const ServicioContratado = require('../models/ServicioContratado');
+const Usuario = require('../models/Usuario');
 
+// Configuración de Nodemailer
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -18,13 +14,12 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const URL_BASE = "https://proyecto-final-kirks-delta.vercel.app";
-
+// ================================================
 // 1. CREAR SESIÓN DE STRIPE
-router.post('/create-checkout-session', authMiddleware, async (req, res) => {
+// ================================================
+exports.crearSesionStripe = async (req, res) => {
     try {
         const { items } = req.body;
-        if (!items || items.length === 0) return res.status(400).json({ error: 'No hay productos' });
 
         const lineItems = items.map(item => ({
             price_data: {
@@ -39,82 +34,117 @@ router.post('/create-checkout-session', authMiddleware, async (req, res) => {
             payment_method_types: ['card'],
             line_items: lineItems,
             mode: 'payment',
-            success_url: `${URL_BASE}/exito.html`,
-            cancel_url:  `${URL_BASE}/carrito.html`,
+            success_url: 'http://localhost:4000/exito.html',
+            cancel_url:  'http://localhost:4000/carrito.html',
         });
 
         res.json({ url: session.url });
     } catch (error) {
-        console.error("Error Stripe:", error);
-        res.status(500).json({ error: error.message });
+        console.error("Error en Stripe:", error);
+        res.status(500).json({ error: 'Error al iniciar el pago' });
     }
-});
+};
 
-// 2. CONFIRMAR COMPRA
-router.post('/confirmar-compra', authMiddleware, async (req, res) => {
+// ================================================
+// 2. CONFIRMAR COMPRA — guarda en BD y manda correo
+// ================================================
+exports.confirmarCompra = async (req, res) => {
     try {
         const { items } = req.body;
         const usuarioDb = await Usuario.findById(req.user.id);
+
         if (!usuarioDb) return res.status(404).json({ error: 'Usuario no encontrado' });
 
+        // Generar un ID único para esta orden (agrupa todos los productos de esta compra)
         const ordenId = crypto.randomBytes(8).toString('hex').toUpperCase();
-        
+
+        let totalCompra = 0;
+        let listaProductosHTML = '';
+
         for (const item of items) {
+            const totalItem = Number(item.price) * item.cantidad;
+            totalCompra += totalItem;
+
             const nuevaVenta = new ProductoVendido({
-                usuario: usuarioDb.nombreUsuario,
-                ordenId: ordenId,
+                usuario:        usuarioDb.nombreUsuario,
+                ordenId:        ordenId,   // <-- mismo ID para todos los items de esta compra
                 nombreProducto: item.title,
-                precio: Number(item.price),
-                cantidad: item.cantidad,
-                total: Number(item.price) * item.cantidad,
-                fecha: new Date()
+                precio:         Number(item.price),
+                cantidad:       item.cantidad,
+                total:          totalItem,
+                fecha:          new Date()
             });
             await nuevaVenta.save();
+
+            listaProductosHTML += `<li>${item.cantidad}x ${item.title} — $${totalItem} MXN</li>`;
         }
 
+        // Correo de confirmación
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: usuarioDb.correo,
+            subject: 'Ticket de Compra - Doggie Chic Studio',
+            html: `
+                <h1>¡Gracias por tu compra, ${usuarioDb.nombreUsuario}!</h1>
+                <p>Tu pago ha sido procesado con éxito.</p>
+                <p><strong>Orden #${ordenId}</strong></p>
+                <ul>${listaProductosHTML}</ul>
+                <h3>Total pagado: $${totalCompra} MXN</h3>
+                <p><strong>Estado:</strong> Tu pedido se encuentra en camino. 🐾</p>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
         res.json({ success: true, ordenId });
+
     } catch (error) {
-        console.error("Error Confirmar:", error);
-        res.status(500).json({ error: error.message });
+        console.error("Error al guardar/enviar correo:", error);
+        res.status(500).json({ error: 'Error al confirmar la compra' });
     }
-});
+};
 
-// 3. HISTORIAL (Ruta que te está dando el error 500)
-router.get('/historial', authMiddleware, async (req, res) => {
+// ================================================
+// 3. HISTORIAL — devuelve productos agrupados por ordenId
+// ================================================
+exports.obtenerHistorial = async (req, res) => {
     try {
-        // Buscamos al usuario por el ID que viene en el token decodificado
         const usuarioDb = await Usuario.findById(req.user.id);
-        if (!usuarioDb) return res.status(404).json({ success: false, msg: 'Usuario no encontrado' });
+        const nombreUser = usuarioDb.nombreUsuario;
 
-        // Buscamos sus compras y servicios
-        const productos = await ProductoVendido.find({ usuario: usuarioDb.nombreUsuario }).sort({ fecha: -1 });
-        const servicios = await ServicioContratado.find({ usuario: usuarioDb.nombreUsuario }).sort({ fecha: -1 });
+        const productos = await ProductoVendido.find({ usuario: nombreUser }).sort({ fecha: -1 });
+        const servicios = await ServicioContratado.find({ usuario: nombreUser }).sort({ horaServicio: -1 });
 
-        // Agrupamos productos por ordenId
+        // Agrupar productos por ordenId
         const ordenesMap = {};
         productos.forEach(prod => {
-            const key = prod.ordenId || `legacy_${prod._id}`;
+            // Productos viejos sin ordenId: cada uno es su propia "orden"
+            const key = prod.ordenId || `_legacy_${prod._id}`;
+
             if (!ordenesMap[key]) {
                 ordenesMap[key] = {
-                    ordenId: prod.ordenId || "S/N",
-                    fecha: prod.fecha,
+                    ordenId:   prod.ordenId || null,
+                    fecha:     prod.fecha,
                     productos: [],
                     totalOrden: 0
                 };
             }
-            ordenesMap[key].productos.push(prod);
-            ordenesMap[key].totalOrden += prod.total;
+
+            ordenesMap[key].productos.push({
+                nombreProducto: prod.nombreProducto,
+                precio:         prod.precio,
+                cantidad:       prod.cantidad,
+                total:          prod.total
+            });
+
+            ordenesMap[key].totalOrden += prod.total || 0;
         });
 
-        res.json({ 
-            success: true, 
-            ordenes: Object.values(ordenesMap), 
-            servicios 
-        });
+        // Convertir a array ordenado por fecha (más reciente primero)
+        const ordenes = Object.values(ordenesMap).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+        res.json({ success: true, ordenes, servicios });
+
     } catch (error) {
-        console.error("Error Historial:", error);
-        res.status(500).json({ success: false, error: error.message });
+        res.status(500).json({ success: false, error: 'Error al obtener historial' });
     }
-});
-
-module.exports = router;
+};
