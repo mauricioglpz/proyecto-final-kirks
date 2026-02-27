@@ -104,12 +104,11 @@ async function cargarNoticiasPositivas() {
 
 
 // ================================================
-// INICIALIZACIÓN (Al cargar el DOM)
+// INICIALIZACIÓN (Corregida)
 // ================================================
 document.addEventListener("DOMContentLoaded", () => {
   window.updateBadge();
 
-  // Gestión de Sesión (Login/Logout)
   const userName = localStorage.getItem('doggie_user');
   const userLink = document.getElementById('userLink');
   const userText = document.getElementById('userText');
@@ -118,12 +117,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const carritoWrapper = document.getElementById('carrito-wrapper');
 
   if (userName && userText && menuUsuario) {
+    userText.innerText = "Mis Compras";
     if (userLink) {
-      userLink.style.display = 'inline-block'; 
-      userText.innerText = "Mis Compras";
-      userLink.href = "cuenta.html"; 
+        userLink.style.display = 'inline-block'; 
+        userLink.href = "cuenta.html"; 
     }
-
     if (carritoBtn) carritoBtn.style.display = 'flex';
     if (carritoWrapper) carritoWrapper.style.display = 'block';
 
@@ -131,33 +129,29 @@ document.addEventListener("DOMContentLoaded", () => {
       const logoutBtn = document.createElement('a');
       logoutBtn.innerText = "Salir";
       logoutBtn.className = "logout-button";
-      
       logoutBtn.onclick = (e) => {
         e.preventDefault();
         if (confirm("¿Quieres cerrar sesión?")) {
-          localStorage.removeItem('doggie_user');
-          localStorage.removeItem('token');
-          localStorage.removeItem('doggie_role');
+          localStorage.clear();
           window.location.reload();
         }
       };
       menuUsuario.appendChild(logoutBtn);
     }
-  } else {
-    if (carritoBtn) carritoBtn.style.display = 'none';
-    if (carritoWrapper) carritoWrapper.style.display = 'none';
   }
 
-  window.addEventListener('storage', window.updateBadge);
-  document.addEventListener('carritoActualizado', window.updateBadge);
-  
-  // ¡AQUÍ ESTÁ LA SOLUCIÓN! Llamamos a la función para que se ejecute al cargar la página.
+  // CARGAR NOTICIAS
   cargarNoticiasPositivas();
-});
 
-const btnVerCatalogo = document.getElementById('load-more');
-// Agregamos el evento de clic
-btnVerCatalogo.addEventListener('click', () => {
-    // Si quieres una redirección inmediata:
-    window.location.href = 'productos.html';
-});
+  // FIX DEL BOTÓN: Ahora sí lo buscamos dentro del DOMContentLoaded
+  const btnVerCatalogo = document.getElementById('load-more');
+  if (btnVerCatalogo) {
+      btnVerCatalogo.addEventListener('click', () => {
+          // Si quieres que te lleve a la tienda:
+          window.location.href = 'Productos.html';
+          
+          // O si quieres que cargue más ahí mismo (opcional):
+          // console.log("Cargando más productos...");
+      });
+  }
+}); // <-- Aquí se cierra correctamente el DOMContentLoaded
