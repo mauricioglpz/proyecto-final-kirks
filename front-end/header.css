@@ -43,14 +43,13 @@ html, body {
 }
 
 .logo img {
-  height: 52px !important;
+  height: 45px !important; /* Decreased height to shrink the overall logo */
   width: auto !important;
   display: block !important;
-  background: rgba(255,255,255,.96) !important;
-  padding: 7px 12px !important;
-  border-radius: 14px !important;
-  border: 2px solid rgba(255,255,255,.25) !important;
-  box-shadow: 0 8px 16px rgba(0,0,0,.16) !important;
+  background: white !important; /* White background color */
+  padding: 7px 15px !important; /* Reduced lateral padding (15px) for a tighter oval fit, and slightly reduced vertical */
+  border-radius: 50px !important; /* Keep large radius to ensure pill shape */
+  box-shadow: 0 4px 8px rgba(0,0,0,.16) !important; /* Softer shadow */
 }
 
 /* ===== NAVBAR CENTRADA ===== */
@@ -246,10 +245,13 @@ html, body {
     justify-content: center;
   }
 
+  @media (max-width: 911px) {
   .logo img {
-    height: 42px !important;
+    height: 35px !important; /* Smaller mobile height for the new pill-logo */
+    padding: 5px 10px !important; /* Tight mobile padding */
+    border-radius: 50px !important; /* Radius must stay large */
   }
-
+}
   /* Acciones (Cuenta + Carrito) — columna derecha */
   .menu-actions {
     grid-area: acciones;
