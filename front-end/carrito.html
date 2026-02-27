@@ -220,6 +220,12 @@
         .carrito-vacio h3 { font-size: 24px; color: #1D1E23; margin-bottom: 10px; }
         .carrito-vacio p { color: #3A3D46; margin-bottom: 28px; }
 
+        /* ===== CORRECCIÓN DE CAPAS PARA REDES SOCIALES ===== */
+        .social-links { position: relative; z-index: 100; }
+        .social-links a { display: inline-block; pointer-events: auto !important; cursor: pointer; }
+        .float { z-index: 9999 !important; }
+        .footer { position: relative; z-index: 10; clear: both; }
+
         /* ===== BREAKPOINTS ===== */
 
         /* Tablet (768px): ocultar columna imagen y subtotal en tabla */
@@ -250,7 +256,6 @@
         <i class="fa fa-whatsapp my-float"></i>
     </a>
 
-    <!-- ===== HEADER / NAVBAR ===== -->
     <header class="header">
         <img class="bg" src="img/bg.png" alt="">
         <div class="menu container">
@@ -286,16 +291,13 @@
         </div>
     </header>
 
-    <!-- ===== CONTENIDO DEL CARRITO ===== -->
     <section class="carrito-page">
         <div class="container">
             <h2>Tu Carrito</h2>
             <p>Revisa tus productos antes de continuar con la compra.</p>
 
-            <!-- Se muestra si hay productos -->
             <div id="carritoConProductos" style="display:none;">
 
-                <!-- TABLA (desktop / tablet) -->
                 <div class="carrito-tabla-wrapper">
                     <table class="carrito-tabla">
                         <thead>
@@ -312,7 +314,6 @@
                     </table>
                 </div>
 
-                <!-- TARJETAS (móvil tipo Amazon) -->
                 <div class="carrito-cards" id="carritoCards"></div>
 
                 <div class="carrito-bottom">
@@ -336,7 +337,6 @@
                 </div>
             </div>
 
-            <!-- Se muestra si está vacío -->
             <div id="carritoVacio" style="display:none;">
                 <div class="carrito-vacio">
                     <img src="img/car.svg" alt="carrito vacío">
@@ -348,7 +348,6 @@
         </div>
     </section>
 
-    <!-- ===== FOOTER ===== -->
     <footer class="footer">
         <div class="footer-content container">
             <div class="link">
@@ -521,13 +520,11 @@
                     const diferencia = nuevaCantidad - cantidadActual;
 
                     if (diferencia > 0) {
-                        // Insertar copias justo despues del ultimo item con ese id
                         const ultimoIdx = cart.map(i => i.id).lastIndexOf(id);
                         for (let x = 0; x < diferencia; x++) {
                             cart.splice(ultimoIdx + 1 + x, 0, { ...itemBase });
                         }
                     } else if (diferencia < 0) {
-                        // Eliminar las ultimas N copias de ese id
                         let aEliminar = Math.abs(diferencia);
                         for (let i = cart.length - 1; i >= 0 && aEliminar > 0; i--) {
                             if (cart[i].id === id) {
@@ -563,12 +560,18 @@
             if (confirm("¿Seguro que quieres vaciar el carrito?")) setCart([]);
         });
 
-        // Comprar ahora (igual que tenías)
+        // Comprar ahora (Corregido con Token)
         document.getElementById("btnComprarAhora").addEventListener("click", async () => {
             const cart = getCart();
             if (!cart.length) return;
 
-            const nombreUsuario = localStorage.getItem('doggie_user') || "Usuario Invitado";
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert("Debes iniciar sesión para realizar la compra.");
+                window.location.href = "login.html";
+                return;
+            }
+
             const agrupado = {};
             cart.forEach(item => {
                 if (!agrupado[item.id]) agrupado[item.id] = { ...item, cantidad: 1 };
@@ -579,14 +582,18 @@
             try {
                 const respuesta = await fetch('/api/crear-sesion-stripe', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ items, usuario: nombreUsuario })
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token 
+                    },
+                    body: JSON.stringify({ items })
                 });
                 if (respuesta.ok) {
                     const data = await respuesta.json();
                     window.location.href = data.url;
                 } else {
-                    alert("Error al iniciar el pago.");
+                    const error = await respuesta.json();
+                    alert("Error: " + (error.msg || "No autorizado"));
                 }
             } catch (error) {
                 alert("Error de conexión con el servidor.");
@@ -602,18 +609,22 @@
 
             if (userName) {
                 userText.innerText = "Hola, " + userName;
-                userLink.href = "#";
-                const logoutBtn = document.createElement('a');
-                logoutBtn.innerText = "Salir";
-                logoutBtn.className = "logout-button";
-                logoutBtn.onclick = (e) => {
-                    e.preventDefault();
-                    if (confirm("¿Quieres cerrar sesión?")) {
-                        localStorage.removeItem('doggie_user');
-                        window.location.reload();
-                    }
-                };
-                menuUsuario.appendChild(logoutBtn);
+                userLink.href = "cuenta.html";
+                if (!document.querySelector('.logout-button')) {
+                    const logoutBtn = document.createElement('a');
+                    logoutBtn.innerText = "Salir";
+                    logoutBtn.className = "logout-button";
+                    logoutBtn.onclick = (e) => {
+                        e.preventDefault();
+                        if (confirm("¿Quieres cerrar sesión?")) {
+                            localStorage.removeItem('doggie_user');
+                            localStorage.removeItem('token');
+                            localStorage.removeItem('doggie_role');
+                            window.location.reload();
+                        }
+                    };
+                    menuUsuario.appendChild(logoutBtn);
+                }
             }
 
             renderCarrito();
