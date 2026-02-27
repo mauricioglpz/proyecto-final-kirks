@@ -5,9 +5,10 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const authMiddleware = require('../middlewares/authMiddleware');
 
+// IMPORTANTE: Verifica que los nombres de carpetas y archivos coincidan exactamente (mayúsculas/minúsculas)
+const Usuario = require('../models/Usuario');
 const ProductoVendido = require('../models/ProductoVendido');
 const ServicioContratado = require('../models/ServicioContratado');
-const Usuario = require('../models/Usuario');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -17,15 +18,13 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// URL base de tu proyecto en Vercel
 const URL_BASE = "https://proyecto-final-kirks-delta.vercel.app";
 
-// ================================================
-// 1. CREAR SESIÓN DE STRIPE (POST /api/pagos/create-checkout-session)
-// ================================================
+// 1. CREAR SESIÓN DE STRIPE
 router.post('/create-checkout-session', authMiddleware, async (req, res) => {
     try {
         const { items } = req.body;
+        if (!items || items.length === 0) return res.status(400).json({ error: 'No hay productos' });
 
         const lineItems = items.map(item => ({
             price_data: {
@@ -40,76 +39,81 @@ router.post('/create-checkout-session', authMiddleware, async (req, res) => {
             payment_method_types: ['card'],
             line_items: lineItems,
             mode: 'payment',
-            // CORREGIDO: Ahora apuntan a tu web real en Vercel
             success_url: `${URL_BASE}/exito.html`,
             cancel_url:  `${URL_BASE}/carrito.html`,
         });
 
         res.json({ url: session.url });
     } catch (error) {
-        console.error("Error en Stripe:", error);
-        res.status(500).json({ error: 'Error al iniciar el pago' });
+        console.error("Error Stripe:", error);
+        res.status(500).json({ error: error.message });
     }
 });
 
-// ================================================
 // 2. CONFIRMAR COMPRA
-// ================================================
 router.post('/confirmar-compra', authMiddleware, async (req, res) => {
     try {
         const { items } = req.body;
         const usuarioDb = await Usuario.findById(req.user.id);
-
         if (!usuarioDb) return res.status(404).json({ error: 'Usuario no encontrado' });
 
         const ordenId = crypto.randomBytes(8).toString('hex').toUpperCase();
-        let totalCompra = 0;
-        let listaProductosHTML = '';
-
+        
         for (const item of items) {
-            const totalItem = Number(item.price) * item.cantidad;
-            totalCompra += totalItem;
-
             const nuevaVenta = new ProductoVendido({
-                usuario:        usuarioDb.nombreUsuario,
-                ordenId:        ordenId,
+                usuario: usuarioDb.nombreUsuario,
+                ordenId: ordenId,
                 nombreProducto: item.title,
-                precio:         Number(item.price),
-                cantidad:       item.cantidad,
-                total:          totalItem,
-                fecha:          new Date()
+                precio: Number(item.price),
+                cantidad: item.cantidad,
+                total: Number(item.price) * item.cantidad,
+                fecha: new Date()
             });
             await nuevaVenta.save();
-            listaProductosHTML += `<li>${item.cantidad}x ${item.title} — $${totalItem} MXN</li>`;
         }
 
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: usuarioDb.correo,
-            subject: 'Ticket de Compra - Doggie Chic Studio',
-            html: `<h1>¡Gracias por tu compra!</h1><p>Orden #${ordenId}</p><ul>${listaProductosHTML}</ul>`
-        };
-
-        await transporter.sendMail(mailOptions);
         res.json({ success: true, ordenId });
     } catch (error) {
-        res.status(500).json({ error: 'Error al confirmar' });
+        console.error("Error Confirmar:", error);
+        res.status(500).json({ error: error.message });
     }
 });
 
-// ================================================
-// 3. HISTORIAL
-// ================================================
+// 3. HISTORIAL (Ruta que te está dando el error 500)
 router.get('/historial', authMiddleware, async (req, res) => {
     try {
+        // Buscamos al usuario por el ID que viene en el token decodificado
         const usuarioDb = await Usuario.findById(req.user.id);
+        if (!usuarioDb) return res.status(404).json({ success: false, msg: 'Usuario no encontrado' });
+
+        // Buscamos sus compras y servicios
         const productos = await ProductoVendido.find({ usuario: usuarioDb.nombreUsuario }).sort({ fecha: -1 });
         const servicios = await ServicioContratado.find({ usuario: usuarioDb.nombreUsuario }).sort({ fecha: -1 });
-        
-        // ... (el resto de tu lógica de agrupación está bien)
-        res.json({ success: true, ordenes: [], servicios }); 
+
+        // Agrupamos productos por ordenId
+        const ordenesMap = {};
+        productos.forEach(prod => {
+            const key = prod.ordenId || `legacy_${prod._id}`;
+            if (!ordenesMap[key]) {
+                ordenesMap[key] = {
+                    ordenId: prod.ordenId || "S/N",
+                    fecha: prod.fecha,
+                    productos: [],
+                    totalOrden: 0
+                };
+            }
+            ordenesMap[key].productos.push(prod);
+            ordenesMap[key].totalOrden += prod.total;
+        });
+
+        res.json({ 
+            success: true, 
+            ordenes: Object.values(ordenesMap), 
+            servicios 
+        });
     } catch (error) {
-        res.status(500).json({ success: false });
+        console.error("Error Historial:", error);
+        res.status(500).json({ success: false, error: error.message });
     }
 });
 
