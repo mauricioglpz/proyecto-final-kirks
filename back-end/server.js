@@ -270,17 +270,6 @@ app.use((req, res) => {
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en: http://localhost:${PORT}`);
 });
-// Agrega esto en tu server.js antes del app.listen
-app.get('/api/noticias-perrunas', async (req, res) => {
-    try {
-        const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-        const response = await fetch('https://www.reddit.com/r/UpliftingNews/search.json?q=dog+OR+puppy+OR+perro&restrict_sr=on&sort=hot&limit=10');
-        const data = await response.json();
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ error: "Error al obtener noticias" });
-    }
-});
 
 module.exports = app;
 
