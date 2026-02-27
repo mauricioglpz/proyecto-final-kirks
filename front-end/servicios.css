@@ -240,6 +240,7 @@ a{ text-decoration:none; color:inherit; }
   padding: 16px 0;
   color: var(--muted);
   font-weight: 600;
+  margin-top: 60px;
 }
 
 /* Responsive */
