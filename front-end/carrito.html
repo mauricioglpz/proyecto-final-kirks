@@ -402,10 +402,10 @@
                 </ul>
             </div>
             <div class="link">
-                <h3>Doggie Chic Studio</h3>
-                <div class="descargar">
-                    <img src="img/store1.png" alt="App">
-                    <img src="img/store2.png" alt="App">
+               <h3>Doggie Chic Studio</h3>
+                <div class="descarga social-links">
+                  <a href="https://www.facebook.com/p/Doggie-Chic-Studio-61572230048849/" target="_blank"><img src="img/store1.png" alt="FB"></a>
+                  <a href="https://www.instagram.com/doggiechic_studio/" target="_blank"><img src="img/store2.png" alt="IG"></a>
                 </div>
             </div>
         </div>
@@ -548,7 +548,7 @@
 
                 try {
                     // 3. Apuntar a la nueva ruta y enviar el token
-                   const respuesta = await fetch('/api/pagos/create-checkout-session', {
+                    const respuesta = await fetch('/api/pagos/crear-sesion-stripe', {
                         method: 'POST',
                         headers: { 
                             'Content-Type': 'application/json',
