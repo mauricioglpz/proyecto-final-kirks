@@ -41,17 +41,26 @@ async function cargarNoticiasPositivas() {
     if (localStorage.getItem(cacheKey) && (ahora - localStorage.getItem(cacheTime) < 600000)) {
         data = JSON.parse(localStorage.getItem(cacheKey));
     } else {
-        try {
-            const url = 'https://www.reddit.com/r/UpliftingNews/search.json?q=dog+OR+puppy+OR+perro&restrict_sr=on&sort=hot&limit=10';
-            const response = await fetch(url);
-            data = await response.json();
-            localStorage.setItem(cacheKey, JSON.stringify(data));
-            localStorage.setItem(cacheTime, ahora.toString());
-        } catch (error) {
-            console.error('Error al cargar noticias:', error);
-            return;
-        }
-    }
+       // Cambia esta parte dentro de cargarNoticiasPositivas()
+try {
+  // Usamos un proxy gratuito para saltar el bloqueo de CORS (AllOrigins)
+  const redditUrl = 'https://www.reddit.com/r/UpliftingNews/search.json?q=dog+OR+puppy+OR+perro&restrict_sr=on&sort=hot&limit=10';
+  const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(redditUrl)}`;
+  
+  const response = await fetch(proxyUrl);
+  const proxyData = await response.json();
+  
+  // El proxy envuelve la respuesta en un campo llamado 'contents'
+  data = JSON.parse(proxyData.contents); 
+  
+  localStorage.setItem(cacheKey, JSON.stringify(data));
+  localStorage.setItem(cacheTime, ahora.toString());
+} catch (error) {
+  console.error('Error al cargar noticias:', error);
+  // Agregamos un mensaje visual si falla
+  track.innerHTML = '<p style="padding:20px;">Cargando noticias para ti...</p>';
+  return;
+}
 
     let html = '';
     data.data.children.forEach(post => {
@@ -154,3 +163,4 @@ document.addEventListener("DOMContentLoaded", () => {
   // ¡AQUÍ ESTÁ LA SOLUCIÓN! Llamamos a la función para que se ejecute al cargar la página.
   cargarNoticiasPositivas();
 });
+};
