@@ -30,80 +30,96 @@ window.updateBadge = function() {
 // NOTICIAS (REDDIT API) Y CARRUSEL
 // ================================================
 async function cargarNoticiasPositivas() {
-  const track = document.getElementById('noticias-track');
-  if (!track) return;
-  
-  // 1. NOTICIAS DE RESPALDO (Por si falla la API)
-  const noticiasRespaldo = [
-      { title: "Perrito rescatado encuentra un nuevo hogar en Monterrey", link: "#", img: "img/b1.png" },
-      { title: "Nueva jornada de vacunación gratuita para mascotas", link: "#", img: "img/b2.png" },
-      { title: "Estudio revela que los perros entienden mejor de lo que pensamos", link: "#", img: "img/b3.png" }
-  ];
+    const track = document.getElementById('noticias-track');
+    if (!track) return;
+    
+    let data;
+    const cacheKey = 'noticias_reddit_cache';
+    const cacheTime = 'noticias_reddit_time';
+    const ahora = Date.now();
 
-  let data;
-  try {
-      // Usamos un proxy más rápido (Corsproxy.io)
-      const redditUrl = 'https://www.reddit.com/r/UpliftingNews/search.json?q=dog+puppy+perro&restrict_sr=on&sort=hot&limit=10';
-      const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(redditUrl)}`);
-      
-      if (!response.ok) throw new Error("Error en respuesta de red");
-      
-      const json = await response.json();
-      data = json.data.children; // Reddit guarda los posts aquí
-  } catch (error) {
-      console.error('Fallo la API de Reddit, usando respaldo:', error);
-  }
+    if (localStorage.getItem(cacheKey) && (ahora - localStorage.getItem(cacheTime) < 600000)) {
+        data = JSON.parse(localStorage.getItem(cacheKey));
+    } else {
+       // Cambia esta parte dentro de cargarNoticiasPositivas()
+       try {
+        // Usamos el parámetro .json de Reddit pero con un truco de headers
+        const url = 'https://www.reddit.com/r/UpliftingNews/search.json?q=dog+OR+puppy+OR+perro&restrict_sr=on&sort=hot&limit=10';
+        
+        // En la web (Vercel), necesitamos que Reddit no bloquee la petición
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                // Esto es clave: Reddit a veces bloquea peticiones sin User-Agent
+                'User-Agent': 'DoggieChic/1.0.0'
+            }
+        });
+    
+        if (!response.ok) {
+            // Si Reddit nos bloquea por CORS, usamos este puente de emergencia que SIEMPRE funciona
+            const fallbackRes = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+            const fallbackData = await fallbackRes.json();
+            data = JSON.parse(fallbackData.contents);
+        } else {
+            data = await response.json();
+        }
+    
+        localStorage.setItem(cacheKey, JSON.stringify(data));
+        localStorage.setItem(cacheTime, ahora.toString());
+    } catch (error) {
+        console.error('Error al cargar noticias:', error);
+        return;
+    }
 
-  let html = '';
+    let html = '';
+    data.data.children.forEach(post => {
+        const title = post.data.title;
+        const link = "https://reddit.com" + post.data.permalink;
+        let img = post.data.thumbnail;
+        
+        if (!img || img === 'self' || img === 'default') {
+            img = 'img/b1.png'; 
+        }
 
-  // 2. SI HAY DATOS DE REDDIT, LOS USAMOS
-  if (data && data.length > 0) {
-      data.forEach(post => {
-          const p = post.data;
-          const title = p.title;
-          const link = "https://reddit.com" + p.permalink;
-          let img = p.thumbnail;
-          
-          // Limpieza de imagen
-          if (!img || img === 'self' || img === 'default' || !img.startsWith('http')) {
-              img = 'img/b1.png'; 
-          }
+        html += `
+            <div class="noticia-card">
+                <img src="${img}" alt="Noticia">
+                <h3 style="font-size: 15px; margin: 12px 0; color: #1D1E23;">${title}</h3>
+                <a href="${link}" target="_blank" class="btn-3" style="font-size: 13px;">Leer noticia</a>
+            </div>
+        `;
+    });
 
-          html += `
-              <div class="noticia-card">
-                  <img src="${img}" alt="Noticia">
-                  <h3 style="font-size: 15px; margin: 12px 0; color: #1D1E23; height: 45px; overflow: hidden;">${title}</h3>
-                  <a href="${link}" target="_blank" class="btn-3" style="font-size: 13px;">Leer noticia</a>
-              </div>
-          `;
-      });
-  } else {
-      // 3. SI NO HAY DATOS, PINTAMOS LAS DE RESPALDO
-      noticiasRespaldo.forEach(n => {
-          html += `
-              <div class="noticia-card">
-                  <img src="${n.img}" alt="Noticia">
-                  <h3 style="font-size: 15px; margin: 12px 0; color: #1D1E23;">${n.title}</h3>
-                  <a href="${n.link}" class="btn-3" style="font-size: 13px;">Leer más</a>
-              </div>
-          `;
-      });
-  }
+    track.innerHTML = html; 
 
-  track.innerHTML = html; 
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const distanciaScroll = 320; 
+    let autoScrollTimer;
 
-  // Reiniciar Carrusel (esto es necesario para que las flechas funcionen con el nuevo HTML)
-  configurarFlechasCarrusel(track);
+    const moverDerecha = () => {
+        if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
+            track.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            track.scrollBy({ left: distanciaScroll, behavior: 'smooth' });
+        }
+    };
+
+    const moverIzquierda = () => {
+        track.scrollBy({ left: -distanciaScroll, behavior: 'smooth' });
+    };
+
+    const reiniciarAutoScroll = () => {
+        clearInterval(autoScrollTimer);
+        autoScrollTimer = setInterval(moverDerecha, 5000);
+    };
+
+    if(btnNext) btnNext.addEventListener('click', () => { moverDerecha(); reiniciarAutoScroll(); });
+    if(btnPrev) btnPrev.addEventListener('click', () => { moverIzquierda(); reiniciarAutoScroll(); });
+
+    autoScrollTimer = setInterval(moverDerecha, 5000);
 }
 
-function configurarFlechasCarrusel(track) {
-  const btnPrev = document.getElementById('btn-prev');
-  const btnNext = document.getElementById('btn-next');
-  if(!btnPrev || !btnNext) return;
-
-  btnNext.onclick = () => track.scrollBy({ left: 320, behavior: 'smooth' });
-  btnPrev.onclick = () => track.scrollBy({ left: -320, behavior: 'smooth' });
-}
 
 // ================================================
 // INICIALIZACIÓN (Al cargar el DOM)
@@ -156,3 +172,4 @@ document.addEventListener("DOMContentLoaded", () => {
   // ¡AQUÍ ESTÁ LA SOLUCIÓN! Llamamos a la función para que se ejecute al cargar la página.
   cargarNoticiasPositivas();
 });
+};
