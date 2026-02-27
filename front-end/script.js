@@ -154,3 +154,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // ¡AQUÍ ESTÁ LA SOLUCIÓN! Llamamos a la función para que se ejecute al cargar la página.
   cargarNoticiasPositivas();
 });
+
+const btnVerCatalogo = document.getElementById('load-more');
+// Agregamos el evento de clic
+btnVerCatalogo.addEventListener('click', () => {
+    // Si quieres una redirección inmediata:
+    window.location.href = 'productos.html';
+});
