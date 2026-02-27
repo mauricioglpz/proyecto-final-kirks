@@ -559,50 +559,35 @@
             if (confirm("¿Seguro que quieres vaciar el carrito?")) setCart([]);
         });
 
-        // Comprar ahora (igual que tenías)
-      document.getElementById("btnComprarAhora").addEventListener("click", async () => {
-    const cart = getCart();
-    if (!cart.length) return;
+        // Comprar ahora
+        document.getElementById("btnComprarAhora").addEventListener("click", async () => {
+            const cart = getCart();
+            if (!cart.length) return;
 
-    // 1. Obtener el token (necesario si tu backend usa authMiddleware)
-    const token = localStorage.getItem('token'); 
-    
-    // 2. Configurar la URL (Cambia localhost:5000 por el puerto donde corra tu servidor)
-    // Si estás en producción, usa tu URL de Vercel.
-    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:4000/api/pagos/crear-sesion-stripe'
-        : '/api/crear-sesion-stripe';
+            const nombreUsuario = localStorage.getItem('doggie_user') || "Usuario Invitado";
+            const agrupado = {};
+            cart.forEach(item => {
+                if (!agrupado[item.id]) agrupado[item.id] = { ...item, cantidad: 1 };
+                else agrupado[item.id].cantidad++;
+            });
+            const items = Object.values(agrupado);
 
-    const agrupado = {};
-    cart.forEach(item => {
-        if (!agrupado[item.id]) agrupado[item.id] = { ...item, cantidad: 1 };
-        else agrupado[item.id].cantidad++;
-    });
-    const items = Object.values(agrupado);
-
-    try {
-        const respuesta = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'x-auth-token': token // Enviamos el token para que el servidor sepa quién compra
-            },
-            body: JSON.stringify({ items })
+            try {
+                const respuesta = await fetch('/api/pagos/crear-sesion-stripe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items, usuario: nombreUsuario })
+                });
+                if (respuesta.ok) {
+                    const data = await respuesta.json();
+                    window.location.href = data.url;
+                } else {
+                    alert("Error al iniciar el pago.");
+                }
+            } catch (error) {
+                alert("Error de conexión con el servidor.");
+            }
         });
-
-        if (respuesta.ok) {
-            const data = await respuesta.json();
-            // Redirigir a la pasarela de Stripe
-            window.location.href = data.url;
-        } else {
-            const errorData = await respuesta.json();
-            alert("Error: " + (errorData.error || "No se pudo iniciar el pago"));
-        }
-    } catch (error) {
-        console.error("Error de conexión:", error);
-        alert("Error de conexión con el servidor. Revisa si el backend está encendido.");
-    }
-});
 
         // Login/usuario
         document.addEventListener("DOMContentLoaded", () => {
