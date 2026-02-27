@@ -11,129 +11,208 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
     <style>
-        /* Estilos específicos para la página de Mis Compras */
+        /* ===== PÁGINA ===== */
         .cuenta-page {
-            padding: 50px 20px 100px 20px;
+            padding: 50px 20px 100px;
             min-height: 60vh;
         }
 
         .page-title {
-            font-size: 45px;
+            font-size: 42px;
             color: #1D1E23;
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
+            font-weight: 900;
         }
 
         .compras-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+            margin-top: 10px;
         }
 
+        /* ===== TICKET CARD ===== */
         .compra-box {
             background: #fff;
             border-radius: 18px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            padding: 0;
+            box-shadow: 0 8px 28px rgba(0,0,0,.08);
             border-top: 4px solid #0A8CEF;
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
+            overflow: hidden;
+            transition: transform .2s, box-shadow .2s;
         }
 
         .compra-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 14px 36px rgba(0,0,0,.13);
         }
 
-        .compra-box h3 {
-            font-size: 20px;
-            color: #1D1E23;
-            margin-bottom: 18px;
+        .compra-servicio {
+            border-top-color: #28a745;
+        }
+
+        /* ── Header del ticket ── */
+        .ticket-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 12px;
-        }
-
-        .compra-box p {
-            margin-bottom: 10px;
-            font-size: 15px;
-            color: #3A3D46;
-            display: flex;
             justify-content: space-between;
+            padding: 18px 20px 14px;
+            gap: 12px;
         }
 
-        .compra-box strong {
+        .ticket-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ticket-orden {
+            display: block;
+            font-size: 15px;
+            font-weight: 800;
             color: #1D1E23;
+        }
+
+        .ticket-fecha {
+            display: block;
+            font-size: 12px;
+            color: #888;
             font-weight: 600;
+            margin-top: 2px;
         }
 
-        .total-destacado {
-            color: #0A8CEF !important;
-            font-weight: 800 !important;
-            font-size: 16px !important;
-        }
-
-        .estado-envio {
-            margin-top: 20px;
+        .ticket-badge {
             background: #E6F3FF;
             color: #076FBE;
-            padding: 12px 15px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 14px;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 5px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        /* ── Divisor ── */
+        .ticket-divider {
+            height: 1px;
+            background: #f0f0f0;
+            margin: 0 20px;
+        }
+
+        /* ── Filas de productos ── */
+        .ticket-productos {
+            padding: 12px 20px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ticket-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
             gap: 10px;
         }
 
-        .estado-envio i {
-            font-size: 20px;
+        .ticket-row-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #3A3D46;
+            flex: 1;
+            line-height: 1.3;
+        }
+
+        .ticket-qty {
+            display: inline-block;
+            background: #E6F3FF;
+            color: #076FBE;
+            font-weight: 800;
+            font-size: 12px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            margin-right: 6px;
+        }
+
+        .ticket-row-price {
+            font-size: 14px;
+            font-weight: 800;
+            color: #1D1E23;
+            white-space: nowrap;
+        }
+
+        /* ── Total ── */
+        .ticket-total-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            gap: 10px;
+        }
+
+        .ticket-total-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #3A3D46;
+        }
+
+        .ticket-total-monto {
+            font-size: 18px;
+            font-weight: 900;
             color: #0A8CEF;
         }
 
+        /* ── Estado envío ── */
+        .estado-envio {
+            margin: 0;
+            background: #E6F3FF;
+            color: #076FBE;
+            padding: 12px 20px;
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 0 0 16px 16px;
+        }
+
+        .estado-envio i { font-size: 18px; }
+
+        /* ===== EMPTY STATE ===== */
         .empty-state {
             text-align: center;
             padding: 50px;
             background: #fff;
             border-radius: 18px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,.05);
             grid-column: 1 / -1;
         }
 
         .empty-state h3 {
-            font-size: 24px;
+            font-size: 22px;
             color: #1D1E23;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
-        /* ===== Estilos Login/Usuario (Heredados) ===== */
-        .logout-button {
-            margin-left: 10px;
-            padding: 3px 10px;
-            background-color: #ff4d4d;
-            color: white !important;
-            border-radius: 15px;
-            font-size: 11px;
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .compras-grid { grid-template-columns: 1fr; }
+            .page-title { font-size: 30px; }
         }
-        .logout-button:hover { background-color: #cc0000; }
-        #userText { font-weight: bold; color: #0A8CEF; }
-        #carrito-btn { display: flex; align-items: center; gap: 6px; position: relative; text-decoration: none; cursor: pointer; }
-        #cartCount { background: #ff4d4d; color: #fff; border-radius: 50%; padding: 1px 6px; font-size: 11px; font-weight: 800; min-width: 18px; text-align: center; line-height: 18px; }
-        .menu-actions { display: flex; align-items: center; gap: 15px; }
+
+        /* ===== Header heredado ===== */
+        #carrito-btn { display:flex; align-items:center; gap:6px; position:relative; text-decoration:none; cursor:pointer; }
+        #cartCount { background:#ff4d4d; color:#fff; border-radius:50%; padding:1px 6px; font-size:11px; font-weight:800; min-width:18px; text-align:center; line-height:18px; }
+        .menu-actions { display:flex; align-items:center; gap:15px; }
     </style>
 </head>
 <body>
 
-    <a href="https://api.whatsapp.com/send?phone=8136254170&text=Hola, me gustaria Obtener más información" class="float pulse" target="_blank"> 
+    <a href="https://api.whatsapp.com/send?phone=8136254170&text=Hola, me gustaria Obtener más información"
+       class="float pulse" target="_blank">
         <i class="fa fa-whatsapp my-float"></i>
     </a>
 
+    <!-- ===== HEADER ===== -->
     <header class="header">
         <div class="menu container">
             <input type="checkbox" id="menu" />
@@ -160,8 +239,7 @@
                         <span id="userText">Cuenta</span>
                     </a>
                 </div>
-                
-                <a href="carrito.html" id="carrito-btn" style="display: none;">
+                <a href="carrito.html" id="carrito-btn" style="display:none;">
                     <img src="img/car.svg" id="img-carrito" alt="Carrito" />
                     <span id="cartCount">0</span>
                 </a>
@@ -171,7 +249,7 @@
 
     <main class="container cuenta-page">
         <h1 class="page-title"><span class="resaltado">Mis</span> Compras</h1>
-        
+
         <div id="lista-compras" class="compras-grid">
             <div class="empty-state">
                 <p>Cargando tu historial...</p>
@@ -185,8 +263,8 @@
                 <h3>Servicios</h3>
                 <ul>
                     <li><a href="Productos.html">Productos</a></li>
-                    <li><a href="servicios.html">Estetica Canina</a></li>
-                    <li><a href="servicios.html">Membresias</a></li>
+                    <li><a href="servicios.html">Estética Canina</a></li>
+                    <li><a href="servicios.html">Membresías</a></li>
                 </ul>
             </div>
             <div class="link">
@@ -199,8 +277,8 @@
             <div class="link">
                 <h3>Doggie Chic Studio</h3>
                 <div class="descarga social-links">
-                  <a href="https://www.facebook.com/p/Doggie-Chic-Studio-61572230048849/" target="_blank"><img src="img/store1.png" alt="FB"></a>
-                  <a href="https://www.instagram.com/doggiechic_studio/" target="_blank"><img src="img/store2.png" alt="IG"></a>
+                    <a href="https://www.facebook.com/p/Doggie-Chic-Studio-61572230048849/" target="_blank"><img src="img/store1.png" alt="FB"></a>
+                    <a href="https://www.instagram.com/doggiechic_studio/" target="_blank"><img src="img/store2.png" alt="IG"></a>
                 </div>
             </div>
         </div>
