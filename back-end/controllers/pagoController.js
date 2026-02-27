@@ -30,13 +30,17 @@ exports.crearSesionStripe = async (req, res) => {
             quantity: item.cantidad,
         }));
 
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: lineItems,
-            mode: 'payment',
-            success_url: 'http://localhost:4000/exito.html',
-            cancel_url:  'http://localhost:4000/carrito.html',
-        });
+      const protocol = req.protocol; // Detecta si es http o https
+const host = req.get('host');  // Detecta si es localhost o proyecto-final...vercel.app
+
+const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: lineItems,
+    mode: 'payment',
+    // Esto construye la URL automáticamente:
+    success_url: `${protocol}://${host}/exito.html`,
+    cancel_url:  `${protocol}://${host}/carrito.html`,
+});
 
         res.json({ url: session.url });
     } catch (error) {
