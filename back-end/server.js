@@ -59,7 +59,7 @@ passport.use(new GoogleStrategy({
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "https://proyecto-final-kirks-delta.vercel.app/auth/github/callback"
+    callbackURL: "https://proyecto-final-kirks-delta.vercel.app/auth/google/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
@@ -248,14 +248,40 @@ app.post('/api/productos/vender', authMiddleware, async (req, res) => {
     }
 });
 
-// ELIMINA las líneas de app.use(express.static...) y res.sendFile(...)
-// Y DEJA SOLO ESTO:
-
-app.get('/', (req, res) => {
-    res.send("Servidor encendido y listo.");
+app.post('/api/contacto', async (req, res) => {
+    try {
+        const nuevoMensaje = new Mensaje(req.body);
+        await nuevoMensaje.save();
+        res.status(201).json({ success: true });
+    } catch (error) {
+        res.status(400).json({ success: false, error: error.message });
+    }
 });
 
-app.use('/api/auth', authRoutes);
-app.use('/api/pagos', pagosRoutes);
+// ARCHIVOS ESTÁTICOS
+const publicPath = path.join(__dirname, '..', 'front-end');
+app.use(express.static(publicPath));
+
+// FALLBACK PARA SPA (CORREGIDO PARA TU VERSIÓN DE NODE)
+app.use((req, res) => {
+    res.sendFile(path.join(publicPath, 'index.html'));
+});
+
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en: http://localhost:${PORT}`);
+});
+// Agrega esto en tu server.js antes del app.listen
+app.get('/api/noticias-perrunas', async (req, res) => {
+    try {
+        const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+        const response = await fetch('https://www.reddit.com/r/UpliftingNews/search.json?q=dog+OR+puppy+OR+perro&restrict_sr=on&sort=hot&limit=10');
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: "Error al obtener noticias" });
+    }
+});
 
 module.exports = app;
+
+// deploy final
