@@ -548,7 +548,7 @@
 
                 try {
                     // 3. Apuntar a la nueva ruta y enviar el token
-                    const respuesta = await fetch('/api/pagos/crear-sesion-stripe', {
+                   const respuesta = await fetch('/api/pagos/create-checkout-session', {
                         method: 'POST',
                         headers: { 
                             'Content-Type': 'application/json',
