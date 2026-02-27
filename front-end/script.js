@@ -38,30 +38,20 @@ async function cargarNoticiasPositivas() {
     const cacheTime = 'noticias_reddit_time';
     const ahora = Date.now();
 
-    // Intentar cargar del cache
-    const cacheVal = localStorage.getItem(cacheKey);
-    const cacheT = localStorage.getItem(cacheTime);
-
-    if (cacheVal && cacheT && (ahora - parseInt(cacheT) < 600000)) {
-        data = JSON.parse(cacheVal);
+    if (localStorage.getItem(cacheKey) && (ahora - localStorage.getItem(cacheTime) < 600000)) {
+        data = JSON.parse(localStorage.getItem(cacheKey));
     } else {
         try {
-            // LLAMADA A TU PROPIA API (Para evitar el CORS de Vercel)
-            const response = await fetch('/api/noticias-perrunas'); 
-            if (!response.ok) throw new Error("Error en el servidor");
-            
+            const url = 'https://www.reddit.com/r/UpliftingNews/search.json?q=dog+OR+puppy+OR+perro&restrict_sr=on&sort=hot&limit=10';
+            const response = await fetch(url);
             data = await response.json();
-            
             localStorage.setItem(cacheKey, JSON.stringify(data));
             localStorage.setItem(cacheTime, ahora.toString());
         } catch (error) {
             console.error('Error al cargar noticias:', error);
-            return; // Si falla, salimos para no romper el resto
+            return;
         }
     }
-
-    // Validar que la data tenga el formato de Reddit
-    if (!data || !data.data || !data.data.children) return;
 
     let html = '';
     data.data.children.forEach(post => {
@@ -69,14 +59,14 @@ async function cargarNoticiasPositivas() {
         const link = "https://reddit.com" + post.data.permalink;
         let img = post.data.thumbnail;
         
-        if (!img || img === 'self' || img === 'default' || !img.startsWith('http')) {
+        if (!img || img === 'self' || img === 'default') {
             img = 'img/b1.png'; 
         }
 
         html += `
             <div class="noticia-card">
                 <img src="${img}" alt="Noticia">
-                <h3 style="font-size: 15px; margin: 12px 0; color: #1D1E23; height: 45px; overflow: hidden;">${title}</h3>
+                <h3 style="font-size: 15px; margin: 12px 0; color: #1D1E23;">${title}</h3>
                 <a href="${link}" target="_blank" class="btn-3" style="font-size: 13px;">Leer noticia</a>
             </div>
         `;
@@ -84,47 +74,83 @@ async function cargarNoticiasPositivas() {
 
     track.innerHTML = html; 
 
-    // Configuración del Movimiento del Carrusel
     const btnPrev = document.getElementById('btn-prev');
     const btnNext = document.getElementById('btn-next');
     const distanciaScroll = 320; 
+    let autoScrollTimer;
 
-    if(btnNext) btnNext.onclick = () => track.scrollBy({ left: distanciaScroll, behavior: 'smooth' });
-    if(btnPrev) btnPrev.onclick = () => track.scrollBy({ left: -distanciaScroll, behavior: 'smooth' });
+    const moverDerecha = () => {
+        if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
+            track.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            track.scrollBy({ left: distanciaScroll, behavior: 'smooth' });
+        }
+    };
+
+    const moverIzquierda = () => {
+        track.scrollBy({ left: -distanciaScroll, behavior: 'smooth' });
+    };
+
+    const reiniciarAutoScroll = () => {
+        clearInterval(autoScrollTimer);
+        autoScrollTimer = setInterval(moverDerecha, 5000);
+    };
+
+    if(btnNext) btnNext.addEventListener('click', () => { moverDerecha(); reiniciarAutoScroll(); });
+    if(btnPrev) btnPrev.addEventListener('click', () => { moverIzquierda(); reiniciarAutoScroll(); });
+
+    autoScrollTimer = setInterval(moverDerecha, 5000);
 }
 
+
 // ================================================
-// INICIALIZACIÓN
+// INICIALIZACIÓN (Al cargar el DOM)
 // ================================================
 document.addEventListener("DOMContentLoaded", () => {
   window.updateBadge();
 
+  // Gestión de Sesión (Login/Logout)
   const userName = localStorage.getItem('doggie_user');
   const userLink = document.getElementById('userLink');
   const userText = document.getElementById('userText');
   const menuUsuario = document.getElementById('menu-usuario');
   const carritoBtn = document.getElementById('carrito-btn');
+  const carritoWrapper = document.getElementById('carrito-wrapper');
 
-  if (userName && userText) {
-    userText.innerText = "Hola, " + userName;
-    if (userLink) userLink.href = "cuenta.html";
+  if (userName && userText && menuUsuario) {
+    if (userLink) {
+      userLink.style.display = 'inline-block'; 
+      userText.innerText = "Mis Compras";
+      userLink.href = "cuenta.html"; 
+    }
+
     if (carritoBtn) carritoBtn.style.display = 'flex';
+    if (carritoWrapper) carritoWrapper.style.display = 'block';
 
-    if (menuUsuario && !document.querySelector('.logout-button')) {
+    if (!document.querySelector('.logout-button')) {
       const logoutBtn = document.createElement('a');
       logoutBtn.innerText = "Salir";
       logoutBtn.className = "logout-button";
-      logoutBtn.style.marginLeft = "10px";
+      
       logoutBtn.onclick = (e) => {
         e.preventDefault();
-        if (confirm("¿Cerrar sesión?")) {
-          localStorage.clear();
-          window.location.href = "index.html";
+        if (confirm("¿Quieres cerrar sesión?")) {
+          localStorage.removeItem('doggie_user');
+          localStorage.removeItem('token');
+          localStorage.removeItem('doggie_role');
+          window.location.reload();
         }
       };
       menuUsuario.appendChild(logoutBtn);
     }
+  } else {
+    if (carritoBtn) carritoBtn.style.display = 'none';
+    if (carritoWrapper) carritoWrapper.style.display = 'none';
   }
 
+  window.addEventListener('storage', window.updateBadge);
+  document.addEventListener('carritoActualizado', window.updateBadge);
+  
+  // ¡AQUÍ ESTÁ LA SOLUCIÓN! Llamamos a la función para que se ejecute al cargar la página.
   cargarNoticiasPositivas();
 });
