@@ -59,7 +59,7 @@ passport.use(new GoogleStrategy({
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "https://proyecto-final-kirks-delta.vercel.app/auth/github/callback"
+    callbackURL: "https://proyecto-final-kirks-delta.vercel.app/auth/google/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
@@ -134,40 +134,7 @@ function soloAdmin(req, res, next) {
     }
 }
 
-// LOGIN MANUAL
-app.post('/api/auth/login', async (req, res) => {
-    try {
-        const { correo, password } = req.body;
-        const usuario = await Usuario.findOne({ correo });
 
-        if (!usuario) {
-            return res.status(401).json({ msg: 'Credenciales incorrectas' });
-        }
-
-        const bcrypt = require('bcryptjs');
-        const passwordValido = await bcrypt.compare(password, usuario.password);
-        if (!passwordValido) {
-            return res.status(401).json({ msg: 'Credenciales incorrectas' });
-        }
-
-        const token = jwt.sign(
-            { id: usuario._id, role: usuario.role },
-            process.env.JWT_SECRET,
-            { expiresIn: '7d' }
-        );
-
-        res.json({
-            success: true,
-            token,
-            nombre: usuario.nombreUsuario,
-            role: usuario.role 
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ msg: 'Error del servidor' });
-    }
-});
 
 // CRUD DE PRODUCTOS
 app.get('/api/productos', async (req, res) => {
