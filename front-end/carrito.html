@@ -560,56 +560,58 @@
         });
 
         // Comprar ahora
-       // Comprar ahora (VERSION CORREGIDA)
-document.getElementById("btnComprarAhora").addEventListener("click", async () => {
-    const cart = getCart();
-    if (!cart.length) return;
+        document.getElementById("btnComprarAhora").addEventListener("click", async () => {
+            const cart = getCart();
+            if (!cart.length) return;
 
-    // 1. Obtener el token y el usuario (Asegúrate de que 'token' sea el nombre correcto)
-    const token = localStorage.getItem('token'); 
-    const nombreUsuario = localStorage.getItem('doggie_user') || "Usuario Invitado";
+            // 1. Validar token para asegurar que inició sesión
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert("Por favor, inicia sesión para completar tu compra.");
+                window.location.href = "login.html";
+                return;
+            }
 
-    if (!token) {
-        alert("Debes iniciar sesión para realizar la compra.");
-        window.location.href = "login.html";
-        return;
-    }
+            const nombreUsuario = localStorage.getItem('doggie_user') || "Usuario Invitado";
+            const agrupado = {};
+            cart.forEach(item => {
+                if (!agrupado[item.id]) agrupado[item.id] = { ...item, cantidad: 1 };
+                else agrupado[item.id].cantidad++;
+            });
+            const items = Object.values(agrupado);
 
-    const agrupado = {};
-    cart.forEach(item => {
-        if (!agrupado[item.id]) agrupado[item.id] = { ...item, cantidad: 1 };
-        else agrupado[item.id].cantidad++;
-    });
-    const items = Object.values(agrupado);
+            localStorage.setItem('compra_pendiente', JSON.stringify(items));
 
-    // 2. Definir la URL correcta (ajusta el puerto 4000 si es necesario)
-    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:4000/api/pagos/crear-sesion-stripe'
-        : '/api/pagos/crear-sesion-stripe';
+            try {
+                const respuesta = await fetch('/api/pagos/crear-sesion-stripe', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token // <-- Aquí agregamos el token
+                    },
+                    body: JSON.stringify({ items, usuario: nombreUsuario })
+                });
 
-    try {
-        const respuesta = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'x-auth-token': token  // <--- ESTA LINEA ES VITAL
-            },
-            body: JSON.stringify({ items, usuario: nombreUsuario })
+                if (respuesta.ok) {
+                    const data = await respuesta.json();
+                    window.location.href = data.url;
+                } else {
+                    // 2. Leemos el error real para saber qué está pasando
+                    const errorText = await respuesta.text();
+                    console.error("Respuesta del servidor:", errorText);
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        alert("Error al iniciar el pago: " + (errorJson.msg || errorJson.error));
+                    } catch(e) {
+                        alert("Error del servidor. Revisa la consola (F12) para más detalles.");
+                    }
+                }
+            } catch (error) {
+                console.error("Error en la conexión (fetch):", error);
+                alert("Error de conexión con el servidor.");
+            }
         });
 
-        if (respuesta.ok) {
-            const data = await respuesta.json();
-            window.location.href = data.url; // Redirigir a Stripe
-        } else {
-            // Si el servidor responde con error (ej: 401, 403, 500)
-            const errorData = await respuesta.json();
-            alert("Error del servidor: " + (errorData.msg || "No se pudo crear la sesión"));
-        }
-    } catch (error) {
-        console.error("Error de conexión:", error);
-        alert("Error de conexión con el servidor. Revisa si el backend está encendido en el puerto 4000.");
-    }
-});
         // Login/usuario
         document.addEventListener("DOMContentLoaded", () => {
             const userName = localStorage.getItem('doggie_user');
