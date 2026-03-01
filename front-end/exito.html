@@ -10,51 +10,64 @@
     
     <div style="background: white; padding: 40px; border-radius: 18px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
         <h1 style="color: #28a745; margin-bottom: 10px;">¡Pago Exitoso!</h1>
-        <p style="color: #3A3D46;">Tu compra de prueba se ha procesado correctamente.</p>
+        <p style="color: #3A3D46;" id="statusMessage">Procesando tu orden y enviando confirmación...</p>
         <a href="index.html" style="display: inline-block; margin-top: 20px; padding: 12px 24px; background: #0A8CEF; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">Volver al inicio</a>
     </div>
 
-    <script>
-        localStorage.removeItem("doggie_cart_shop_v1");
-    </script>
-
     <script src="script.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', async () => {
-        const token = localStorage.getItem('token');
-        
-        // 1. Leemos la compra pendiente que guardamos antes de ir a Stripe
-        const itemsString = localStorage.getItem('compra_pendiente');
-        let items = [];
-        
-        try {
-            if (itemsString) items = JSON.parse(itemsString);
-        } catch(e) {}
-
-        // 2. Si hay productos pendientes y el usuario está logueado, mandamos el correo
-        if (items.length > 0 && token) {
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            // 1. Leemos la compra pendiente que guardamos antes de ir a Stripe
+            const itemsString = localStorage.getItem('compra_pendiente');
+            let items = [];
+            
             try {
-                const respuesta = await fetch('/api/pagos/confirmar-compra', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'x-auth-token': token
-                    },
-                    body: JSON.stringify({ items })
-                });
-
-                if (respuesta.ok) {
-                    console.log("¡Compra confirmada en base de datos y correo enviado!");
-                    // 3. Limpiamos la memoria temporal y el carrito real
-                    localStorage.removeItem('compra_pendiente');
-                    window.setCart([]);
-                }
-            } catch (error) {
-                console.error("Error al confirmar la compra:", error);
+                if (itemsString) items = JSON.parse(itemsString);
+            } catch(e) {
+                console.error("Error al analizar los items:", e);
             }
-        }
-    });
-</script>
 
+            // 2. Si hay productos pendientes y el usuario está logueado, mandamos el correo
+            if (items.length > 0 && token) {
+                try {
+                    const respuesta = await fetch('/api/pagos/confirmar-compra', {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'x-auth-token': token
+                        },
+                        body: JSON.stringify({ items })
+                    });
+
+                    if (respuesta.ok) {
+                        console.log("¡Compra confirmada en base de datos y correo enviado!");
+                        statusMessage.textContent = "Tu compra se ha guardado correctamente y el recibo ha sido enviado a tu correo.";
+                        
+                        // 3. Limpiamos la memoria temporal y el carrito real SOLO si el servidor respondió bien
+                        localStorage.removeItem('compra_pendiente');
+                        if (typeof window.setCart === 'function') {
+                            window.setCart([]);
+                        } else {
+                            localStorage.removeItem("doggie_cart_shop_v1"); // Respaldo por si falla script.js
+                        }
+                    } else {
+                        statusMessage.textContent = "El pago se realizó, pero hubo un problema al guardar el historial o enviar el correo.";
+                        // Limpiamos el carrito de todos modos para evitar cobros dobles accidentales
+                        localStorage.removeItem("doggie_cart_shop_v1");
+                    }
+                } catch (error) {
+                    console.error("Error al confirmar la compra:", error);
+                    statusMessage.textContent = "Hubo un error de conexión al registrar tu compra.";
+                }
+            } else {
+                // Si el usuario recarga la página y ya no hay "compra_pendiente"
+                statusMessage.textContent = "Tu compra ya ha sido procesada anteriormente.";
+                localStorage.removeItem("doggie_cart_shop_v1");
+            }
+        });
+    </script>
 </body>
 </html>
