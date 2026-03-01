@@ -379,14 +379,18 @@
                     <li><a href="#">Copyright © 2026. Doggiechic.com</a></li>
                 </ul>
             </div>
-            <div class="link">
-                <h3>Doggie Chic Studio</h3>
-                <div class="descargar">
-                    <img src="img/store1.png" alt="App">
-                    <img src="img/store2.png" alt="App">
-                </div>
-            </div>
-        </div>
+          <div class="link">
+    <h3>Redes Sociales</h3>
+    <div style="display: flex; gap: 25px; margin-top: 15px;">
+        <a href="https://www.facebook.com/https://www.facebook.com/p/Doggie-Chic-Studio-61572230048849/" target="_blank" style="color: #1877F2; text-decoration: none;">
+            <i class="fa fa-facebook" style="font-size: 32px;"></i>
+        </a>
+        
+        <a href="https://www.instagram.com/https://www.instagram.com/doggiechic_studio/" target="_blank" style="color: #E4405F; text-decoration: none;">
+            <i class="fa fa-instagram" style="font-size: 32px;"></i>
+        </a>
+    </div>
+</div>
     </footer>
 
     <script>
@@ -627,8 +631,9 @@
                 logoutBtn.className = "logout-button";
                 logoutBtn.onclick = (e) => {
                     e.preventDefault();
-                    if (confirm("¿Quieres cerrar sesión?")) {
+                     if (confirm("¿Quieres cerrar sesión?")) {
                         localStorage.removeItem('doggie_user');
+                        localStorage.removeItem('token'); 
                         window.location.reload();
                     }
                 };
