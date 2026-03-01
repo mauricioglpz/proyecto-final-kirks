@@ -5,9 +5,13 @@ const ProductoVendido = require('../models/ProductoVendido');
 const ServicioContratado = require('../models/ServicioContratado');
 const Usuario = require('../models/Usuario');
 
-// Configuración de Nodemailer
+
+
+// Configuración de Nodemailer reforzada para Vercel
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // true para el puerto 465
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
