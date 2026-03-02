@@ -159,35 +159,68 @@
 
   <script src="script.js"></script>
   <script>
-    async function contratarServicio(nombreServicio, precioServicio) {
-      const nombreUsuario = localStorage.getItem('doggie_user') || "Usuario Invitado";
-      const datosServicio = { tipoServicio: nombreServicio, usuario: nombreUsuario, precio: precioServicio, fecha: new Date().toLocaleString() };
-      try {
-        console.log("Servicio contratado:", datosServicio);
-        alert(`✅ ¡Éxito! El servicio "${nombreServicio}" se registró para ${nombreUsuario}.`);
-      } catch (err) {
-        alert("❌ No hay conexión con el servidor.");
-      }
+    function agregarServicioAlCarrito(card) {
+      // Extraer datos del servicio desde la tarjeta
+      const nombre = card.querySelector('h3').innerText;
+      const precioTexto = card.querySelector('.price')?.innerText || card.querySelector('.big-price')?.innerText || '';
+      const precio = parseInt(precioTexto.replace(/[^\d]/g, ""));
+      
+      // Obtener la imagen del servicio
+      const imgElement = card.querySelector('.card-img img') || card.querySelector('img');
+      const img = imgElement ? (imgElement.getAttribute('src') || imgElement.src) : 'img/logo-perro.png'; // Imagen por defecto si no hay
+      
+      // Generar un ID único para el servicio
+      const id = card.id || `servicio-${nombre.toLowerCase().replace(/\s+/g, '-')}`;
+      
+      // Crear el item en el mismo formato que los productos
+      const item = {
+        id: id,
+        title: nombre,
+        price: precio,
+        img: img
+      };
+      
+      // Agregar al carrito usando las funciones globales
+      const cart = window.getCart();
+      cart.push(item);
+      window.setCart(cart);
+      
+      alert(`✅ ¡Éxito! El servicio "${nombre}" se agregó al carrito.`);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+      // Event listeners para los paquetes de servicios
       document.querySelectorAll('.pricing .card .btn').forEach(boton => {
         boton.addEventListener('click', (e) => {
           e.preventDefault();
           const card = e.target.closest('.card');
-          const nombre = card.querySelector('h3').innerText;
-          const precio = parseInt(card.querySelector('.price').innerText.replace(/[^\d]/g, ""));
-          contratarServicio(nombre, precio);
+          agregarServicioAlCarrito(card);
         });
       });
 
+      // Event listener para la membresía
       const btnMem = document.querySelector('.membership .btn');
       if (btnMem) {
         btnMem.addEventListener('click', (e) => {
           e.preventDefault();
           const cardMem = e.target.closest('.membership-card');
-          const precio = parseInt(cardMem.querySelector('.big-price').innerText.replace(/[^\d]/g, ""));
-          contratarServicio("Membresía Mensual", precio);
+          // Crear una estructura similar para la membresía
+          const nombre = "Membresía Mensual";
+          const precioTexto = cardMem.querySelector('.big-price')?.innerText || '';
+          const precio = parseInt(precioTexto.replace(/[^\d]/g, ""));
+          
+          const item = {
+            id: 'membresia-mensual',
+            title: nombre,
+            price: precio,
+            img: 'img/logo-perro.png' // Imagen por defecto para membresía
+          };
+          
+          const cart = window.getCart();
+          cart.push(item);
+          window.setCart(cart);
+          
+          alert(`✅ ¡Éxito! El servicio "${nombre}" se agregó al carrito.`);
         });
       }
     });
